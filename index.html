@@ -42,14 +42,14 @@
         .grid-menu {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            gap: 20px;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px;
         }
 
         .menu-card {
             background: rgba(255, 255, 255, 0.95);
-            padding: 35px;
+            padding: 30px;
             border-radius: 24px;
             text-align: center;
             cursor: pointer;
@@ -67,10 +67,11 @@
             margin: 15px 0 8px;
             color: #764ba2;
             font-weight: 800;
+            font-size: 18px;
         }
 
         .icon {
-            font-size: 45px;
+            font-size: 40px;
             display: block;
         }
 
@@ -101,7 +102,7 @@
             background: #fff;
             color: #000;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 10px;
             cursor: pointer;
             margin-bottom: 25px;
@@ -114,7 +115,7 @@
         }
 
         h2 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             color: white;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
@@ -131,6 +132,7 @@
             outline: none;
             background: rgba(255, 255, 255, 0.9);
             color: #333;
+            box-sizing: border-box;
         }
 
         .btn-copy {
@@ -196,7 +198,7 @@
 
     <div id="main-menu">
         <div class="menu-title">
-            <h1>IT SHORTCUT PANEL</h1>
+            <h1>IT ADMIN PANEL</h1>
             <p>Pilih Tools Shortcut Bosku!</p>
         </div>
         <div class="grid-menu">
@@ -208,7 +210,12 @@
             <div class="menu-card" onclick="openTool('klikbca-container')">
                 <span class="icon">🏢</span>
                 <h3>SHORTCUT DP KLIK BCA</h3>
-                <p>Filter Uang Masuk (CR) & Keluar (DB).</p>
+                <p>Filter mutasi KlikBCA.</p>
+            </div>
+            <div class="menu-card" onclick="openTool('mybca-container')">
+                <span class="icon">📱</span>
+                <h3>SHORTCUT DP MY BCA</h3>
+                <p>Filter mutasi format MyBCA.</p>
             </div>
         </div>
     </div>
@@ -241,7 +248,7 @@
         <header>
             <h2>SHORTCUT DP KLIK BCA</h2>
         </header>
-        <textarea id="inputKlikBCA" placeholder="Tempel mutasi Klik BCA di sini..."></textarea>
+        <textarea id="inputKlikBCA" placeholder="Tempel mutasi Klik BCA..."></textarea>
         <button class="btn-copy" onclick="copyData('tableBodyKlikBCA')">✨ Salin Data KLIK BCA!</button>
         <div class="table-container">
             <table>
@@ -257,6 +264,27 @@
         </div>
     </div>
 
+    <div id="mybca-container" class="container">
+        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
+        <header>
+            <h2>SHORTCUT DP MY BCA</h2>
+        </header>
+        <textarea id="inputMyBCA" placeholder="Tempel mutasi MyBCA di sini..."></textarea>
+        <button class="btn-copy" onclick="copyData('tableBodyMyBCA')">✨ Salin Data MyBCA!</button>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Pengirim / Penerima</th>
+                        <th>Nominal Masuk (CR)</th>
+                        <th>Nominal Keluar (DB)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyMyBCA"></tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
         function openTool(id) { 
             document.getElementById('main-menu').style.display = 'none'; 
@@ -267,7 +295,7 @@
             document.querySelectorAll('.container').forEach(c => c.style.display = 'none'); 
         }
 
-        // --- LOGIKA SHORTCUT WD ---
+        // --- LOGIKA WD (STABIL) ---
         const inputWD = document.getElementById('inputWD');
         const tableBodyWD = document.getElementById('tableBodyWD');
         inputWD.addEventListener('input', function() {
@@ -293,7 +321,7 @@
             }
         });
 
-        // --- LOGIKA KLIK BCA ---
+        // --- LOGIKA KLIK BCA (STABIL) ---
         const inputKlikBCA = document.getElementById('inputKlikBCA');
         const tableBodyKlikBCA = document.getElementById('tableBodyKlikBCA');
         inputKlikBCA.addEventListener('input', function() {
@@ -306,14 +334,11 @@
                 if (cleanBlock.length < 15) return;
                 const lines = cleanBlock.split('\n').map(l => l.trim());
                 let nama = "TIDAK TERDETEKSI";
-                let masuk = "";
-                let keluar = "";
+                let masuk = ""; let keluar = "";
                 const typeIndex = lines.findIndex(l => l === "CR" || l === "DB");
                 if (typeIndex !== -1) {
                     const tipe = lines[typeIndex];
-                    const nominalValue = lines[typeIndex - 1];
-                    if (tipe === "CR") { masuk = nominalValue; } 
-                    else { keluar = nominalValue; }
+                    if (tipe === "CR") { masuk = lines[typeIndex - 1]; } else { keluar = lines[typeIndex - 1]; }
                     for (let i = 0; i < typeIndex - 1; i++) {
                         let text = lines[i];
                         if (text.includes("TRANSFER DR") || text.includes("TRANSFER KE")) {
@@ -321,21 +346,58 @@
                             nama = text.split(keyword)[1].trim().replace(/^\d+\s*/, '');
                             break;
                         }
-                        if (text.includes("TRFDN-")) {
-                            nama = text.replace("TRFDN-", "").trim();
-                            break;
-                        }
+                        if (text.includes("TRFDN-")) { nama = text.replace("TRFDN-", "").trim(); break; }
                         if (text.length > 3 && !text.match(/^\d+$/) && !text.match(/^\d+\.\d+$/)) {
-                            if (lines[i+1] === "0000") {
-                                nama = text;
-                                break;
-                            }
+                            if (lines[i+1] === "0000") { nama = text; break; }
                         }
                     }
                 }
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td style="font-weight:bold">${nama}</td><td class="nominal-in">${masuk}</td><td class="nominal-out">${keluar}</td>`;
                 tableBodyKlikBCA.appendChild(tr);
+            });
+        });
+
+        // --- LOGIKA MY BCA (OPTIMAL UNTUK FORMAT GAMBAR) ---
+        const inputMyBCA = document.getElementById('inputMyBCA');
+        const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
+        inputMyBCA.addEventListener('input', function() {
+            const val = this.value.trim();
+            if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
+            
+            // Mencoba split berdasarkan PEND jika format mutasi, atau per baris jika manual
+            const blocks = val.split(/PEND/g);
+            tableBodyMyBCA.innerHTML = "";
+
+            blocks.forEach(block => {
+                const text = block.trim();
+                if (text.length < 10) return;
+
+                let nama = "TIDAK TERDETEKSI";
+                let masuk = "";
+                let keluar = "";
+
+                // Ambil nominal (mencari angka IDR atau format uang)
+                const nominalMatch = text.match(/IDR\s*([\d,.]+)/) || text.match(/([\d,]{5,}\.00)/);
+                const nominal = nominalMatch ? nominalMatch[1] : "";
+
+                // Tentukan CR (Masuk) atau DB (Keluar)
+                if (text.includes("CR") || text.includes("TRANSFER DR")) { masuk = nominal; }
+                else if (text.includes("DB") || text.includes("TRANSFER KE")) { keluar = nominal; }
+
+                // Deteksi Nama
+                if (text.includes("TRANSFER DR")) {
+                    nama = text.split("TRANSFER DR")[1].split(/IDR|IDR/)[0].trim().replace(/^\d+\s*/, '');
+                } else {
+                    // Cari nama di antara kode bank dan nominal
+                    const nameRegex = /WS\d+\s+[\d.]+\s+([A-Z\s\/]+)(?=IDR|IDR)/;
+                    const matchName = text.match(nameRegex);
+                    if (matchName) nama = matchName[1].trim();
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td style="font-weight:bold">${nama}</td><td class="nominal-in">${masuk}</td><td class="nominal-out">${keluar}</td>`;
+                tableBodyMyBCA.appendChild(tr);
             });
         });
 
