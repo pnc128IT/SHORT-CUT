@@ -201,17 +201,19 @@
             }
         }
 
+        /* --- FIX: MENU SEJAJAR --- */
         .grid-menu {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 35px;
-            width: 100%;
-            max-width: 1200px;
+            grid-template-columns: repeat(4, 1fr);
+            /* Maksa 4 kolom sejajar */
+            gap: 20px;
+            width: 95%;
+            max-width: 1400px;
         }
 
         .menu-card {
             background: var(--blue-glass);
-            padding: 50px 30px;
+            padding: 40px 15px;
             border-radius: 15px;
             text-align: center;
             cursor: pointer;
@@ -221,6 +223,23 @@
             box-shadow: 0 15px 40px rgba(0, 10, 30, 0.6);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive Mobile: Kalau layar kecil baru jadi tumpuk */
+        @media (max-width: 1100px) {
+            .grid-menu {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .grid-menu {
+                grid-template-columns: 1fr;
+            }
         }
 
         .menu-card::before {
@@ -244,7 +263,8 @@
         .menu-card h3 {
             margin: 15px 0 10px;
             font-weight: 800;
-            font-size: 22px;
+            font-size: 18px;
+            /* Dikecilkan dikit biar pas 4 kolom */
             text-transform: uppercase;
             letter-spacing: 1px;
             background: var(--silver-gradient);
@@ -260,6 +280,7 @@
             font-weight: 600;
             text-shadow: 1px 1px 5px #000;
             opacity: .9;
+            font-size: 13px;
         }
 
         .container {
@@ -425,34 +446,30 @@
         </div>
         <div class="grid-menu">
 
-            <!-- CARD 1: WD IDN -->
             <div class="menu-card" onclick="openTool('wd-container')">
                 <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp"
-                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto;filter:grayscale(1) brightness(1.5)">
+                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto;filter:grayscale(1) brightness(1.5)">
                 <h3>SHORTCUT WD IDN</h3>
                 <p>Proses data Withdraw cepat & akurat</p>
             </div>
 
-            <!-- CARD 2: WD PNG (BARU) -->
             <div class="menu-card" onclick="openTool('wdpng-container')">
                 <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp"
-                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto;filter:sepia(1) saturate(2) hue-rotate(180deg) brightness(1.4)">
+                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto;filter:sepia(-1) saturate(7) hue-rotate(180deg) brightness(1.4)">
                 <h3>SHORTCUT WD PNG</h3>
                 <p>Proses data Withdraw PNG cepat & akurat</p>
             </div>
 
-            <!-- CARD 3: KLIK BCA -->
             <div class="menu-card" onclick="openTool('klikbca-container')">
                 <img src="https://pustaka.bca.co.id/Ocean/Product/DA162B01-4C4E-4E3F-A118-84C5514F0BD8/Logo/KlikBCA-Bisnis--Logo%20(1)-min.png"
-                    style="width:95px;height:95px;object-fit:contain;display:block;margin:0 auto">
+                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto">
                 <h3>SHORTCUT DP KLIK BCA</h3>
                 <p>Filter mutasi Klik BCA</p>
             </div>
 
-            <!-- CARD 4: MY BCA -->
             <div class="menu-card" onclick="openTool('mybca-container')">
                 <img src="https://play-lh.googleusercontent.com/ckrnc0pzN0oZgSaMQMnOYrICdBLwFTuI17MlTUp9ftyZPJ-m4K1pA3_Dz1B-1dCFVZbv"
-                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto">
+                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto">
                 <h3>SHORTCUT DP MY BCA</h3>
                 <p>Filter mutasi MyBCA</p>
             </div>
@@ -460,7 +477,6 @@
         </div>
     </div>
 
-    <!-- ===== WD IDN CONTAINER ===== -->
     <div id="wd-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
@@ -484,7 +500,6 @@
         </div>
     </div>
 
-    <!-- ===== WD PNG CONTAINER (BARU) ===== -->
     <div id="wdpng-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
@@ -508,7 +523,6 @@
         </div>
     </div>
 
-    <!-- ===== KLIK BCA CONTAINER ===== -->
     <div id="klikbca-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
@@ -530,7 +544,6 @@
         </div>
     </div>
 
-    <!-- ===== MY BCA CONTAINER ===== -->
     <div id="mybca-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
@@ -598,28 +611,18 @@
             const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
             lines.forEach(line => {
-                // Pisah berdasarkan tab atau multi-spasi
                 const cols = line.split(/\t+/).map(c => c.trim());
-
-                // Format kolom PNG:
-                // [0]=NO, [1]=USER ID, [2]=NAMA REKENING, [3]=NOMOR REKENING, [4]=BANK,
-                // [5]=ORDER ID, [6]=THIRD ID, [7]=TANGGAL AWAL, [8]=SUCCES DATA,
-                // [9]=JUMLAH, [10]=STATUS, [11]=INFO, [12]=TOOLS
-
-                // Minimal harus ada 5 kolom dan kolom pertama harus angka (nomor baris)
                 if (cols.length < 5) return;
-                if (!/^\d+$/.test(cols[0])) return; // skip header / baris non-data
+                if (!/^\d+$/.test(cols[0])) return; 
 
                 let userId   = cols[1]  || "";
                 let nama     = cols[2]  || "";
                 let noRek    = cols[3]  || "";
                 let bank     = cols[4]  || "";
-                let jumlah   = cols[9]  || cols[cols.length - 4] || ""; // fallback ke kolom JUMLAH
+                let jumlah   = cols[9]  || cols[cols.length - 4] || ""; 
 
-                // Bersihkan nominal: hapus karakter selain angka, koma, titik
                 jumlah = jumlah.replace(/[^0-9,.]/g, '');
 
-                // Format nominal ribuan: ubah 308000.00 → 308,000
                 if (jumlah && !jumlah.includes(',')) {
                     jumlah = parseFloat(jumlah.replace(/\./g, '')).toLocaleString('id-ID');
                 }
