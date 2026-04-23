@@ -244,7 +244,7 @@
         .menu-card h3 {
             margin: 15px 0 10px;
             font-weight: 800;
-            font-size: 24px;
+            font-size: 22px;
             text-transform: uppercase;
             letter-spacing: 1px;
             background: var(--silver-gradient);
@@ -424,24 +424,43 @@
             <p>Pilih Tools Shortcut Bosku!</p>
         </div>
         <div class="grid-menu">
+
+            <!-- CARD 1: WD IDN -->
             <div class="menu-card" onclick="openTool('wd-container')">
-                <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp" style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto;filter:grayscale(1) brightness(1.5)">
+                <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp"
+                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto;filter:grayscale(1) brightness(1.5)">
                 <h3>SHORTCUT WD IDN</h3>
                 <p>Proses data Withdraw cepat & akurat</p>
             </div>
+
+            <!-- CARD 2: WD PNG (BARU) -->
+            <div class="menu-card" onclick="openTool('wdpng-container')">
+                <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp"
+                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto;filter:sepia(1) saturate(2) hue-rotate(180deg) brightness(1.4)">
+                <h3>SHORTCUT WD PNG</h3>
+                <p>Proses data Withdraw PNG cepat & akurat</p>
+            </div>
+
+            <!-- CARD 3: KLIK BCA -->
             <div class="menu-card" onclick="openTool('klikbca-container')">
-                <img src="https://pustaka.bca.co.id/Ocean/Product/DA162B01-4C4E-4E3F-A118-84C5514F0BD8/Logo/KlikBCA-Bisnis--Logo%20(1)-min.png" style="width:95px;height:95px;object-fit:contain;display:block;margin:0 auto">
+                <img src="https://pustaka.bca.co.id/Ocean/Product/DA162B01-4C4E-4E3F-A118-84C5514F0BD8/Logo/KlikBCA-Bisnis--Logo%20(1)-min.png"
+                    style="width:95px;height:95px;object-fit:contain;display:block;margin:0 auto">
                 <h3>SHORTCUT DP KLIK BCA</h3>
                 <p>Filter mutasi Klik BCA</p>
             </div>
+
+            <!-- CARD 4: MY BCA -->
             <div class="menu-card" onclick="openTool('mybca-container')">
-                <img src="https://play-lh.googleusercontent.com/ckrnc0pzN0oZgSaMQMnOYrICdBLwFTuI17MlTUp9ftyZPJ-m4K1pA3_Dz1B-1dCFVZbv" style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto">
+                <img src="https://play-lh.googleusercontent.com/ckrnc0pzN0oZgSaMQMnOYrICdBLwFTuI17MlTUp9ftyZPJ-m4K1pA3_Dz1B-1dCFVZbv"
+                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto">
                 <h3>SHORTCUT DP MY BCA</h3>
                 <p>Filter mutasi MyBCA</p>
             </div>
+
         </div>
     </div>
 
+    <!-- ===== WD IDN CONTAINER ===== -->
     <div id="wd-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
@@ -465,6 +484,31 @@
         </div>
     </div>
 
+    <!-- ===== WD PNG CONTAINER (BARU) ===== -->
+    <div id="wdpng-container" class="container">
+        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
+        <header>
+            <h2>SHORTCUT WD PNG</h2>
+        </header>
+        <textarea id="inputWDPNG" placeholder="Tempel data WD PNG di sini..."></textarea>
+        <button class="btn-copy" onclick="copyData('tableBodyWDPNG')">✨ Salin Data WD PNG!</button>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bank</th>
+                        <th>No. Rekening</th>
+                        <th>User ID</th>
+                        <th>Nama Pemilik</th>
+                        <th>Nominal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyWDPNG"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== KLIK BCA CONTAINER ===== -->
     <div id="klikbca-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
@@ -486,6 +530,7 @@
         </div>
     </div>
 
+    <!-- ===== MY BCA CONTAINER ===== -->
     <div id="mybca-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
@@ -509,188 +554,214 @@
 
     <script>
         function openTool(id) {
-        document.getElementById('main-menu').style.display = 'none';
-        document.getElementById(id).style.display = 'block';
-        window.scrollTo(0, 0);
-    }
-    function backToMenu() {
-        document.getElementById('main-menu').style.display = 'flex';
-        document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
-    }
-
-    // ===== WD IDN =====
-    document.getElementById('inputWD').addEventListener('input', function () {
-        const val = this.value.trim();
-        const tableBodyWD = document.getElementById('tableBodyWD');
-        if (!val) { tableBodyWD.innerHTML = ""; return; }
-        const parts = val.split(/Withdraw/g);
-        tableBodyWD.innerHTML = "";
-        for (let i = 0; i < parts.length - 1; i++) {
-            let currentPart = parts[i].trim();
-            let nextPart = parts[i + 1].trim();
-            let lines = currentPart.split('\n');
-            let userId = lines[lines.length - 1].trim().replace(/^\d+/, '').replace(/"/g, '');
-            let nominalMatch = nextPart.match(/(\d{1,3}(,\d{3})+)/);
-            let nominal = nominalMatch ? nominalMatch[1] : "";
-            let flatNextPart = nextPart.replace(/\n/g, ' ');
-            let bankDataMatch = flatNextPart.match(/G\d+[\s,]*([^,]+),\s*([\d\*]+),\s*([^0-9\t\n\r]+)/);
-            let bank = bankDataMatch ? bankDataMatch[1].trim() : "";
-            let rek = bankDataMatch ? bankDataMatch[2].trim() : "";
-            let nama = bankDataMatch ? bankDataMatch[3].replace(/\d+$/, '').trim() : "";
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td><span class="bank-badge">${bank}</span></td><td>${rek}</td><td style="color:#fff;font-weight:bold">${userId}</td><td>${nama}</td><td>${nominal}</td>`;
-            tableBodyWD.appendChild(tr);
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById(id).style.display = 'block';
+            window.scrollTo(0, 0);
         }
-    });
+        function backToMenu() {
+            document.getElementById('main-menu').style.display = 'flex';
+            document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
+        }
 
-    // ===== KLIK BCA =====
-    document.getElementById('inputKlikBCA').addEventListener('input', function () {
-        const val = this.value.trim();
-        const tableBodyKlikBCA = document.getElementById('tableBodyKlikBCA');
-        if (!val) { tableBodyKlikBCA.innerHTML = ""; return; }
-        tableBodyKlikBCA.innerHTML = "";
-        const blocks = val.split(/\n(?=\d{1,2}\/\d{2}\/\d{4})/);
-        blocks.forEach(block => {
-            const cleanBlock = block.trim();
-            if (cleanBlock.length < 10) return;
-            const lines = cleanBlock.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            let nama = "TIDAK TERDETEKSI"; let masuk = ""; let keluar = "";
-            const typeIndex = lines.findIndex(l => l === "CR" || l === "DB");
-            if (typeIndex === -1) return;
-            const tipe = lines[typeIndex];
-            const nominal = lines[typeIndex - 1] || "";
-            if (tipe === "CR") masuk = nominal; else keluar = nominal;
-            for (let i = 0; i < typeIndex; i++) {
-                const text = lines[i];
-                if (/^SWITCHING\s+(DB|CR)\s+TRF\s+/i.test(text)) { const m = text.match(/^SWITCHING\s+(?:DB|CR)\s+TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MYBCA|\s+BCA|$)/i); if (m) { nama = m[1].trim(); break; } }
-                if (/^SWITCHING\s+DB\s+BIAYA/i.test(text)) { const m = text.match(/BIAYA\s+TXN\s+KE\s+\d+\s+(.+?)(?:\s+MYBCA|\s+BCA|$)/i); if (m) { nama = m[1].trim(); break; } }
-                if (/^TRSF E-BANKING/i.test(text) && /WS\d+/.test(text)) { const m = text.match(/WS\d+\s+[\d.]+\s+(.+?)$/i); if (m) { nama = m[1].trim(); break; } }
-                if (/^TRSF E-BANKING/i.test(text) && !/WS\d+/.test(text)) { const m = text.match(/TRSF\s+E-BANKING\s+(?:CR|DB)\s+[\d\/]+\s+\S+\s+(.+?)$/i); if (m) { nama = m[1].trim(); break; } }
-                if (text.includes("TRANSFER DR") || text.includes("TRANSFER KE")) { const keyword = text.includes("TRANSFER DR") ? "TRANSFER DR" : "TRANSFER KE"; nama = text.split(keyword)[1].trim().replace(/^\d+\s*/, ''); break; }
-                if (text.includes("TRFDN-")) { nama = text.replace("TRFDN-", "").trim(); break; }
-                if (text.length > 3 && !text.match(/^\d+$/) && !text.match(/^\d{1,3}(,\d{3})*\.\d{2}$/) && !text.match(/^\d{2}\/\d{2}\/\d{4}$/)) { if (lines[i+1]==="0000"||lines[i+1]==="0998"){nama=text;break;} }
+        // ===== WD IDN =====
+        document.getElementById('inputWD').addEventListener('input', function () {
+            const val = this.value.trim();
+            const tableBodyWD = document.getElementById('tableBodyWD');
+            if (!val) { tableBodyWD.innerHTML = ""; return; }
+            const parts = val.split(/Withdraw/g);
+            tableBodyWD.innerHTML = "";
+            for (let i = 0; i < parts.length - 1; i++) {
+                let currentPart = parts[i].trim();
+                let nextPart = parts[i + 1].trim();
+                let lines = currentPart.split('\n');
+                let userId = lines[lines.length - 1].trim().replace(/^\d+/, '').replace(/"/g, '');
+                let nominalMatch = nextPart.match(/(\d{1,3}(,\d{3})+)/);
+                let nominal = nominalMatch ? nominalMatch[1] : "";
+                let flatNextPart = nextPart.replace(/\n/g, ' ');
+                let bankDataMatch = flatNextPart.match(/G\d+[\s,]*([^,]+),\s*([\d\*]+),\s*([^0-9\t\n\r]+)/);
+                let bank = bankDataMatch ? bankDataMatch[1].trim() : "";
+                let rek = bankDataMatch ? bankDataMatch[2].trim() : "";
+                let nama = bankDataMatch ? bankDataMatch[3].replace(/\d+$/, '').trim() : "";
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><span class="bank-badge">${bank}</span></td><td>${rek}</td><td style="color:#fff;font-weight:bold">${userId}</td><td>${nama}</td><td>${nominal}</td>`;
+                tableBodyWD.appendChild(tr);
             }
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td style="font-weight:bold">${nama}</td><td class="nominal-in">${masuk}</td><td class="nominal-out">${keluar}</td>`;
-            tableBodyKlikBCA.appendChild(tr);
         });
-    });
 
-    // ===== MY BCA (PERBAIKAN LENGKAP) =====
-    document.getElementById('inputMyBCA').addEventListener('input', function () {
-        const val = this.value.trim();
-        const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
-        if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
-        tableBodyMyBCA.innerHTML = "";
+        // ===== WD PNG =====
+        document.getElementById('inputWDPNG').addEventListener('input', function () {
+            const val = this.value.trim();
+            const tableBodyWDPNG = document.getElementById('tableBodyWDPNG');
+            if (!val) { tableBodyWDPNG.innerHTML = ""; return; }
+            tableBodyWDPNG.innerHTML = "";
 
-        const blocks = val.split(/\n(?=\d{1,2} [A-Za-z]+ \d{4})/);
+            const lines = val.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
-        blocks.forEach(block => {
-            const text = block.trim();
-            if (text.length < 10) return;
+            lines.forEach(line => {
+                // Pisah berdasarkan tab atau multi-spasi
+                const cols = line.split(/\t+/).map(c => c.trim());
 
-            let nama = "TIDAK TERDETEKSI";
-            let masuk = ""; let keluar = "";
+                // Format kolom PNG:
+                // [0]=NO, [1]=USER ID, [2]=NAMA REKENING, [3]=NOMOR REKENING, [4]=BANK,
+                // [5]=ORDER ID, [6]=THIRD ID, [7]=TANGGAL AWAL, [8]=SUCCES DATA,
+                // [9]=JUMLAH, [10]=STATUS, [11]=INFO, [12]=TOOLS
 
-            // Ambil nominal IDR pertama
-            const allIDR = [...text.matchAll(/IDR\s*([\d,]+\.\d{2})/g)];
-            const nominal = allIDR.length > 0 ? allIDR[0][1] : "";
+                // Minimal harus ada 5 kolom dan kolom pertama harus angka (nomor baris)
+                if (cols.length < 5) return;
+                if (!/^\d+$/.test(cols[0])) return; // skip header / baris non-data
 
-            // Deteksi CR / DB
-            const isCR = /TRSF E-BANKING CR|BI-FAST CR|SWITCHING CR/i.test(text);
-            const isDB = /TRSF E-BANKING DB|BI-FAST DB|SWITCHING DB/i.test(text);
-            if (isCR) masuk = nominal;
-            else if (isDB) keluar = nominal;
+                let userId   = cols[1]  || "";
+                let nama     = cols[2]  || "";
+                let noRek    = cols[3]  || "";
+                let bank     = cols[4]  || "";
+                let jumlah   = cols[9]  || cols[cols.length - 4] || ""; // fallback ke kolom JUMLAH
 
-            // POLA 1: TRFDN-
-            if (/TRFDN-/i.test(text)) {
-                const m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+IDR|\t|$)/i);
-                if (m) { nama = m[1].trim(); return appendRow(); }
-            }
+                // Bersihkan nominal: hapus karakter selain angka, koma, titik
+                jumlah = jumlah.replace(/[^0-9,.]/g, '');
 
-            // POLA 2: TRSF E-BANKING dengan WS\d+
-            if (/TRSF E-BANKING/i.test(text) && /WS\d+/i.test(text)) {
-                const m = text.match(/WS\d+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                if (m) { nama = m[1].trim().replace(/\s*\/A\s*$/, '').trim(); return appendRow(); }
-            }
+                // Format nominal ribuan: ubah 308000.00 → 308,000
+                if (jumlah && !jumlah.includes(',')) {
+                    jumlah = parseFloat(jumlah.replace(/\./g, '')).toLocaleString('id-ID');
+                }
 
-            // POLA 3: TRSF E-BANKING CR/DB tanpa WS (format kode tanggal, misal: 04/17 00TR1 NAMA)
-            if (/TRSF E-BANKING/i.test(text)) {
-                // Format: TRSF E-BANKING CR - 1704/FTSCY/WS95031 28000.00 JUMIYATI
-                const m1 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\w\/]+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                if (m1) { nama = m1[1].trim(); return appendRow(); }
-                // Format: TRSF E-BANKING CR - 04/17 00TR1 KADEK MAHA DARMA
-                const m2 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\d\/]+\s+\w+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                if (m2) { nama = m2[1].trim(); return appendRow(); }
-            }
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><span class="bank-badge">${bank}</span></td>
+                    <td>${noRek}</td>
+                    <td style="color:#fff;font-weight:bold">${userId}</td>
+                    <td>${nama}</td>
+                    <td>${jumlah}</td>
+                `;
+                tableBodyWDPNG.appendChild(tr);
+            });
+        });
 
-            // POLA 4: BI-FAST CR - TRANSFER DR xxx NAMA
-            if (/BI-FAST CR/i.test(text)) {
-                const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                if (m) { nama = m[1].trim(); return appendRow(); }
-                const m2 = text.match(/BI-FAST CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                if (m2) { nama = m2[1].trim(); return appendRow(); }
-            }
-
-            // POLA 5: BI-FAST DB - TRANSFER KE / BIAYA TXN
-            if (/BI-FAST DB/i.test(text)) {
-                // TRANSFER KE 009 AHMAD MARZUKI MyBCA
-                const m = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
-                if (m) { nama = m[1].trim(); return appendRow(); }
-                // BIAYA TXN KE 009 AHMAD MARZUKI MyBCA
-                const m2 = text.match(/BIAYA TXN KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
-                if (m2) { nama = m2[1].trim(); return appendRow(); }
-                // Fallback
-                const m3 = text.match(/BI-FAST DB\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                if (m3) { nama = m3[1].trim(); return appendRow(); }
-            }
-
-            // POLA 6: SWITCHING CR - TRF NAMA xxx
-            if (/SWITCHING CR/i.test(text)) {
-                const m = text.match(/SWITCHING CR\s*-\s*TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MBKBKE|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-                if (m) { nama = m[1].trim(); return appendRow(); }
-                // Fallback SWITCHING CR
-                const m2 = text.match(/SWITCHING CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                if (m2) { nama = m2[1].trim(); return appendRow(); }
-            }
-
-            // POLA 7: SWITCHING DB
-            if (/SWITCHING DB/i.test(text)) {
-                const m = text.match(/TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-                if (m) { nama = m[1].trim(); return appendRow(); }
-                const m2 = text.match(/BIAYA TXN KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-                if (m2) { nama = m2[1].trim(); return appendRow(); }
-            }
-
-            // POLA 8: TRANSFER DR generic
-            if (/TRANSFER DR\s+\d+/.test(text)) {
-                const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                if (m) { nama = m[1].trim(); return appendRow(); }
-            }
-
-            appendRow();
-
-            function appendRow() {
+        // ===== KLIK BCA =====
+        document.getElementById('inputKlikBCA').addEventListener('input', function () {
+            const val = this.value.trim();
+            const tableBodyKlikBCA = document.getElementById('tableBodyKlikBCA');
+            if (!val) { tableBodyKlikBCA.innerHTML = ""; return; }
+            tableBodyKlikBCA.innerHTML = "";
+            const blocks = val.split(/\n(?=\d{1,2}\/\d{2}\/\d{4})/);
+            blocks.forEach(block => {
+                const cleanBlock = block.trim();
+                if (cleanBlock.length < 10) return;
+                const lines = cleanBlock.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                let nama = "TIDAK TERDETEKSI"; let masuk = ""; let keluar = "";
+                const typeIndex = lines.findIndex(l => l === "CR" || l === "DB");
+                if (typeIndex === -1) return;
+                const tipe = lines[typeIndex];
+                const nominal = lines[typeIndex - 1] || "";
+                if (tipe === "CR") masuk = nominal; else keluar = nominal;
+                for (let i = 0; i < typeIndex; i++) {
+                    const text = lines[i];
+                    if (/^SWITCHING\s+(DB|CR)\s+TRF\s+/i.test(text)) { const m = text.match(/^SWITCHING\s+(?:DB|CR)\s+TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MYBCA|\s+BCA|$)/i); if (m) { nama = m[1].trim(); break; } }
+                    if (/^SWITCHING\s+DB\s+BIAYA/i.test(text)) { const m = text.match(/BIAYA\s+TXN\s+KE\s+\d+\s+(.+?)(?:\s+MYBCA|\s+BCA|$)/i); if (m) { nama = m[1].trim(); break; } }
+                    if (/^TRSF E-BANKING/i.test(text) && /WS\d+/.test(text)) { const m = text.match(/WS\d+\s+[\d.]+\s+(.+?)$/i); if (m) { nama = m[1].trim(); break; } }
+                    if (/^TRSF E-BANKING/i.test(text) && !/WS\d+/.test(text)) { const m = text.match(/TRSF\s+E-BANKING\s+(?:CR|DB)\s+[\d\/]+\s+\S+\s+(.+?)$/i); if (m) { nama = m[1].trim(); break; } }
+                    if (text.includes("TRANSFER DR") || text.includes("TRANSFER KE")) { const keyword = text.includes("TRANSFER DR") ? "TRANSFER DR" : "TRANSFER KE"; nama = text.split(keyword)[1].trim().replace(/^\d+\s*/, ''); break; }
+                    if (text.includes("TRFDN-")) { nama = text.replace("TRFDN-", "").trim(); break; }
+                    if (text.length > 3 && !text.match(/^\d+$/) && !text.match(/^\d{1,3}(,\d{3})*\.\d{2}$/) && !text.match(/^\d{2}\/\d{2}\/\d{4}$/)) { if (lines[i+1]==="0000"||lines[i+1]==="0998"){nama=text;break;} }
+                }
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td style="font-weight:bold">${nama}</td><td class="nominal-in">${masuk}</td><td class="nominal-out">${keluar}</td>`;
-                tableBodyMyBCA.appendChild(tr);
-            }
+                tableBodyKlikBCA.appendChild(tr);
+            });
         });
-    });
 
-    async function copyData(tableId) {
-        const body = document.getElementById(tableId);
-        const rows = body.querySelectorAll('tr');
-        if (rows.length === 0) { alert("⚠️ Tidak ada data untuk disalin!"); return; }
-        let output = "";
-        rows.forEach(row => {
-            const rowData = Array.from(row.querySelectorAll('td')).map(c => c.innerText.trim()).join('\t');
-            output += rowData + '\n';
+        // ===== MY BCA =====
+        document.getElementById('inputMyBCA').addEventListener('input', function () {
+            const val = this.value.trim();
+            const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
+            if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
+            tableBodyMyBCA.innerHTML = "";
+
+            const blocks = val.split(/\n(?=\d{1,2} [A-Za-z]+ \d{4})/);
+
+            blocks.forEach(block => {
+                const text = block.trim();
+                if (text.length < 10) return;
+
+                let nama = "TIDAK TERDETEKSI";
+                let masuk = ""; let keluar = "";
+
+                const allIDR = [...text.matchAll(/IDR\s*([\d,]+\.\d{2})/g)];
+                const nominal = allIDR.length > 0 ? allIDR[0][1] : "";
+
+                const isCR = /TRSF E-BANKING CR|BI-FAST CR|SWITCHING CR/i.test(text);
+                const isDB = /TRSF E-BANKING DB|BI-FAST DB|SWITCHING DB/i.test(text);
+                if (isCR) masuk = nominal;
+                else if (isDB) keluar = nominal;
+
+                if (/TRFDN-/i.test(text)) {
+                    const m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+IDR|\t|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                }
+                if (/TRSF E-BANKING/i.test(text) && /WS\d+/i.test(text)) {
+                    const m = text.match(/WS\d+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m) { nama = m[1].trim().replace(/\s*\/A\s*$/, '').trim(); return appendRow(); }
+                }
+                if (/TRSF E-BANKING/i.test(text)) {
+                    const m1 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\w\/]+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m1) { nama = m1[1].trim(); return appendRow(); }
+                    const m2 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\d\/]+\s+\w+\s+(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m2) { nama = m2[1].trim(); return appendRow(); }
+                }
+                if (/BI-FAST CR/i.test(text)) {
+                    const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                    const m2 = text.match(/BI-FAST CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m2) { nama = m2[1].trim(); return appendRow(); }
+                }
+                if (/BI-FAST DB/i.test(text)) {
+                    const m = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                    const m2 = text.match(/BIAYA TXN KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
+                    if (m2) { nama = m2[1].trim(); return appendRow(); }
+                    const m3 = text.match(/BI-FAST DB\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m3) { nama = m3[1].trim(); return appendRow(); }
+                }
+                if (/SWITCHING CR/i.test(text)) {
+                    const m = text.match(/SWITCHING CR\s*-\s*TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MBKBKE|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                    const m2 = text.match(/SWITCHING CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m2) { nama = m2[1].trim(); return appendRow(); }
+                }
+                if (/SWITCHING DB/i.test(text)) {
+                    const m = text.match(/TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                    const m2 = text.match(/BIAYA TXN KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+BCA|\s+IDR|$)/i);
+                    if (m2) { nama = m2[1].trim(); return appendRow(); }
+                }
+                if (/TRANSFER DR\s+\d+/.test(text)) {
+                    const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                }
+
+                appendRow();
+
+                function appendRow() {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td style="font-weight:bold">${nama}</td><td class="nominal-in">${masuk}</td><td class="nominal-out">${keluar}</td>`;
+                    tableBodyMyBCA.appendChild(tr);
+                }
+            });
         });
-        await navigator.clipboard.writeText(output);
-        alert("✅ DATA BERHASIL DISALIN!");
-    }
+
+        async function copyData(tableId) {
+            const body = document.getElementById(tableId);
+            const rows = body.querySelectorAll('tr');
+            if (rows.length === 0) { alert("⚠️ Tidak ada data untuk disalin!"); return; }
+            let output = "";
+            rows.forEach(row => {
+                const rowData = Array.from(row.querySelectorAll('td')).map(c => c.innerText.trim()).join('\t');
+                output += rowData + '\n';
+            });
+            await navigator.clipboard.writeText(output);
+            alert("✅ DATA BERHASIL DISALIN!");
+        }
     </script>
+
 </body>
 
 </html>
