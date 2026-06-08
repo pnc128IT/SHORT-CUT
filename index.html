@@ -674,82 +674,74 @@
 
         // ===== MY BCA =====
         document.getElementById('inputMyBCA').addEventListener('input', function () {
-            const val = this.value.trim();
-            const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
-            if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
-            tableBodyMyBCA.innerHTML = "";
-
-            const blocks = val.split(/\n(?=\d{1,2} [A-Za-z]+ \d{4})/);
-
-            blocks.forEach(block => {
-                const text = block.trim();
-                if (text.length < 10) return;
-
-                let nama = "TIDAK TERDETEKSI";
-                let masuk = ""; let keluar = "";
-
-                const allIDR = [...text.matchAll(/IDR\s*([\d,]+\.\d{2})/g)];
-                const nominal = allIDR.length > 0 ? allIDR[0][1] : "";
-
-                const isCR = /TRSF E-BANKING CR|BI-FAST CR|SWITCHING CR/i.test(text);
-                const isDB = /TRSF E-BANKING DB|BI-FAST DB|SWITCHING DB/i.test(text);
-                if (isCR) masuk = nominal;
-                else if (isDB) keluar = nominal;
-
-                if (/TRFDN-/i.test(text)) {
-                    const m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+IDR|\t|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                }
-                if (/TRSF E-BANKING/i.test(text) && /WS\d+/i.test(text)) {
-                    const m = text.match(/WS\d+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m) { nama = m[1].trim().replace(/\s*\/A\s*$/, '').trim(); return appendRow(); }
-                }
-                if (/TRSF E-BANKING/i.test(text)) {
-                    const m1 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\w\/]+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m1) { nama = m1[1].trim(); return appendRow(); }
-                    const m2 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\d\/]+\s+\w+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m2) { nama = m2[1].trim(); return appendRow(); }
-                }
-                if (/BI-FAST CR/i.test(text)) {
-                    const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                    const m2 = text.match(/BI-FAST CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m2) { nama = m2[1].trim(); return appendRow(); }
-                }
-                if (/BI-FAST DB/i.test(text)) {
-                    const m = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                    const m2 = text.match(/BIAYA TXN KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
-                    if (m2) { nama = m2[1].trim(); return appendRow(); }
-                    const m3 = text.match(/BI-FAST DB\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m3) { nama = m3[1].trim(); return appendRow(); }
-                }
-                if (/SWITCHING CR/i.test(text)) {
-                    const m = text.match(/SWITCHING CR\s*-\s*TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MBKBKE|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                    const m2 = text.match(/SWITCHING CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m2) { nama = m2[1].trim(); return appendRow(); }
-                }
-                if (/SWITCHING DB/i.test(text)) {
-                    const m = text.match(/TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                    const m2 = text.match(/BIAYA TXN KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-                    if (m2) { nama = m2[1].trim(); return appendRow(); }
-                }
-                if (/TRANSFER DR\s+\d+/.test(text)) {
-                    const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                }
-
-                appendRow();
-
-                function appendRow() {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td style="font-weight:bold">${nama}</td><td class="nominal-in">${masuk}</td><td class="nominal-out">${keluar}</td>`;
-                    tableBodyMyBCA.appendChild(tr);
-                }
+        const val = this.value.trim();
+        const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
+        if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
+        tableBodyMyBCA.innerHTML = "";
+        
+        // Split berdasarkan "PEND" ATAU tanggal (support kedua format)
+        let blocks;
+        if (/(?:^|\n)PEND\n/.test(val) || val.startsWith('PEND')) {
+        blocks = val.split(/(?:^|\n)PEND\n/m).map(b => b.trim()).filter(b => b.length > 5);
+        } else {
+        blocks = val.split(/\n(?=\d{1,2} [A-Za-z]+ \d{4})/);
+        }
+        
+        blocks.forEach(block => {
+        const text = block.trim();
+        if (text.length < 5) return; let nama="TIDAK TERDETEKSI" ; let masuk="" ; let keluar="" ; const
+            allIDR=[...text.matchAll(/IDR\s*([\d,]+\.\d{2})/g)]; const nominal=allIDR.length> 0 ? allIDR[0][1] : "";
+        
+            const isCR = /TRSF E-BANKING CR|BI-FAST CR|SWITCHING CR/i.test(text);
+            const isDB = /TRSF E-BANKING DB|BI-FAST DB|SWITCHING DB/i.test(text);
+            if (isCR) masuk = nominal;
+            else if (isDB) keluar = nominal;
+        
+            if (/TRSF E-BANKING/i.test(text)) {
+            // ✅ FIX: Nama ada setelah "WS##### angka.angka"
+            const mWS = text.match(/WS\d+\s+[\d.]+\s+([A-Z][A-Z\s]+?)(?:\s+IDR|\s*\t|\s*$)/i);
+            if (mWS) { nama = mWS[1].trim(); return appendRow(); }
+            const m1 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\w\/]+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
+            if (m1) { nama = m1[1].trim(); return appendRow(); }
+            }
+            if (/SWITCHING CR/i.test(text)) {
+            const m = text.match(/SWITCHING CR\s*-\s*TRF\s+(.+?)(?:\s+\d{3}\s+|\s+SMB|\s+MBKBKE|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
+            if (m) { nama = m[1].trim(); return appendRow(); }
+            const m2 = text.match(/SWITCHING CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+            if (m2) { nama = m2[1].trim(); return appendRow(); }
+            }
+            if (/SWITCHING DB/i.test(text)) {
+            const m = text.match(/TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
+            if (m) { nama = m[1].trim(); return appendRow(); }
+            }
+            if (/TRFDN-/i.test(text)) {
+            const m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+IDR|\t|$)/i);
+            if (m) { nama = m[1].trim(); return appendRow(); }
+            }
+            if (/BI-FAST CR/i.test(text)) {
+            const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
+            if (m) { nama = m[1].trim(); return appendRow(); }
+            const m2 = text.match(/BI-FAST CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+            if (m2) { nama = m2[1].trim(); return appendRow(); }
+            }
+            if (/BI-FAST DB/i.test(text)) {
+            const m = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
+            if (m) { nama = m[1].trim(); return appendRow(); }
+            const m3 = text.match(/BI-FAST DB\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+            if (m3) { nama = m3[1].trim(); return appendRow(); }
+            }
+        
+            appendRow();
+        
+            function appendRow() {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td style="font-weight:bold">${nama}</td>
+            <td class="nominal-in">${masuk}</td>
+            <td class="nominal-out">${keluar}</td>`;
+            tableBodyMyBCA.appendChild(tr);
+            }
             });
-        });
+            });
 
         async function copyData(tableId) {
             const body = document.getElementById(tableId);
