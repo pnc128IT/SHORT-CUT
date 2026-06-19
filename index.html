@@ -639,37 +639,75 @@
             });
         });
 
-        // ===== KLIK BCA =====
-        document.getElementById('inputKlikBCA').addEventListener('input', function () {
-            const val = this.value.trim();
-            const tableBodyKlikBCA = document.getElementById('tableBodyKlikBCA');
-            if (!val) { tableBodyKlikBCA.innerHTML = ""; return; }
-            tableBodyKlikBCA.innerHTML = "";
-            const blocks = val.split(/\n(?=\d{1,2}\/\d{2}\/\d{4})/);
-            blocks.forEach(block => {
-                const cleanBlock = block.trim();
-                if (cleanBlock.length < 10) return;
-                const lines = cleanBlock.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-                let nama = "TIDAK TERDETEKSI"; let masuk = ""; let keluar = "";
-                const typeIndex = lines.findIndex(l => l === "CR" || l === "DB");
-                if (typeIndex === -1) return;
-                const tipe = lines[typeIndex];
-                const nominal = lines[typeIndex - 1] || "";
-                if (tipe === "CR") masuk = nominal; else keluar = nominal;
-                for (let i = 0; i < typeIndex; i++) {
-                    const text = lines[i];
-                    if (/^SWITCHING\s+(DB|CR)\s+TRF\s+/i.test(text)) { const m = text.match(/^SWITCHING\s+(?:DB|CR)\s+TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MYBCA|\s+BCA|$)/i); if (m) { nama = m[1].trim(); break; } }
-                    if (/^SWITCHING\s+DB\s+BIAYA/i.test(text)) { const m = text.match(/BIAYA\s+TXN\s+KE\s+\d+\s+(.+?)(?:\s+MYBCA|\s+BCA|$)/i); if (m) { nama = m[1].trim(); break; } }
-                    if (/^TRSF E-BANKING/i.test(text) && /WS\d+/.test(text)) { const m = text.match(/WS\d+\s+[\d.]+\s+(.+?)$/i); if (m) { nama = m[1].trim(); break; } }
-                    if (/^TRSF E-BANKING/i.test(text) && !/WS\d+/.test(text)) { const m = text.match(/TRSF\s+E-BANKING\s+(?:CR|DB)\s+[\d\/]+\s+\S+\s+(.+?)$/i); if (m) { nama = m[1].trim(); break; } }
-                    if (text.includes("TRANSFER DR") || text.includes("TRANSFER KE")) { const keyword = text.includes("TRANSFER DR") ? "TRANSFER DR" : "TRANSFER KE"; nama = text.split(keyword)[1].trim().replace(/^\d+\s*/, ''); break; }
-                    if (text.includes("TRFDN-")) { nama = text.replace("TRFDN-", "").trim(); break; }
-                    if (text.length > 3 && !text.match(/^\d+$/) && !text.match(/^\d{1,3}(,\d{3})*\.\d{2}$/) && !text.match(/^\d{2}\/\d{2}\/\d{4}$/)) { if (lines[i+1]==="0000"||lines[i+1]==="0998"){nama=text;break;} }
-                }
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="font-weight:bold">${nama}</td><td class="nominal-in">${masuk}</td><td class="nominal-out">${keluar}</td>`;
-                tableBodyKlikBCA.appendChild(tr);
-            });
+// ===== KLIK BCA (DIPERBAIKI) =====
+document.getElementById('inputKlikBCA').addEventListener('input', function () {
+const val = this.value.trim();
+const tableBodyKlikBCA = document.getElementById('tableBodyKlikBCA');
+if (!val) { tableBodyKlikBCA.innerHTML = ""; return; }
+tableBodyKlikBCA.innerHTML = "";
+
+// Pisah per transaksi: utamakan pemisah "PEND" (format baru),
+// fallback ke pemisah tanggal (format lama) kalau "PEND" tidak ada.
+let blocks;
+if (/(?:^|\n)PEND\n/.test(val) || val.startsWith('PEND')) {
+blocks = val.split(/(?:^|\n)PEND\n/m).map(b => b.trim()).filter(b => b.length > 5);
+} else {
+blocks = val.split(/\n(?=\d{1,2}\/\d{2}\/\d{4})/);
+}
+
+blocks.forEach(block => {
+const cleanBlock = block.trim();
+if (cleanBlock.length < 10) return; const lines=cleanBlock.split('\n').map(l=> l.trim()).filter(l => l.length > 0);
+    let nama = "TIDAK TERDETEKSI"; let masuk = ""; let keluar = "";
+
+    const typeIndex = lines.findIndex(l => l === "CR" || l === "DB");
+    if (typeIndex === -1) return;
+    const tipe = lines[typeIndex];
+    const nominal = lines[typeIndex - 1] || "";
+    if (tipe === "CR") masuk = nominal; else keluar = nominal;
+
+    // Patokan utama: baris kode "0000"/"0998" — nama ada tepat di atasnya
+    const codeIndex = lines.findIndex(l => l === "0000" || l === "0998");
+    if (codeIndex > 0) {
+    let candidate = lines[codeIndex - 1];
+
+    // Kasus BI-FAST / SWITCHING: nama menyatu dalam kalimat "TRANSFER DR/KE ..."
+    if (/TRANSFER DR|TRANSFER KE/i.test(candidate)) {
+    const keyword = /TRANSFER DR/i.test(candidate) ? "TRANSFER DR" : "TRANSFER KE";
+    const idx = candidate.toUpperCase().indexOf(keyword);
+    let after = candidate.slice(idx + keyword.length).trim();
+    after = after.replace(/^\d+\s*/, '');
+    candidate = after;
+    }
+
+    if (candidate && !/^\d+([.,]\d+)?$/.test(candidate) && !/^[\d\/]+$/.test(candidate)) {
+    nama = candidate.trim();
+    }
+    }
+
+    // Fallback ke logika lama (format tanpa baris kode "0000")
+    if (nama === "TIDAK TERDETEKSI") {
+    for (let i = 0; i < typeIndex; i++) { const text=lines[i]; if (/^SWITCHING\s+(DB|CR)\s+TRF\s+/i.test(text)) { const
+        m=text.match(/^SWITCHING\s+(?:DB|CR)\s+TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MYBCA|\s+BCA|$)/i); if (m) {
+        nama=m[1].trim(); break; } } if (/^SWITCHING\s+DB\s+BIAYA/i.test(text)) { const
+        m=text.match(/BIAYA\s+TXN\s+KE\s+\d+\s+(.+?)(?:\s+MYBCA|\s+BCA|$)/i); if (m) { nama=m[1].trim(); break; } } if
+        (/^TRSF E-BANKING/i.test(text) && /WS\d+/.test(text)) { const m=text.match(/WS\d+\s+[\d.]+\s+(.+?)$/i); if (m) {
+        nama=m[1].trim(); break; } } if (/^TRSF E-BANKING/i.test(text) && !/WS\d+/.test(text)) { const
+        m=text.match(/TRSF\s+E-BANKING\s+(?:CR|DB)\s+[\d\/]+\s+\S+\s+(.+?)$/i); if (m) { nama=m[1].trim(); break; } } if
+        (text.includes("TRANSFER DR") || text.includes("TRANSFER KE")) { const keyword=text.includes("TRANSFER DR")
+        ? "TRANSFER DR" : "TRANSFER KE" ; nama=text.split(keyword)[1].trim().replace(/^\d+\s*/, '' ); break; } if
+        (text.includes("TRFDN-")) { nama=text.replace("TRFDN-", "" ).trim(); break; } if (text.length> 3 &&
+        !text.match(/^\d+$/) && !text.match(/^\d{1,3}(,\d{3})*\.\d{2}$/) && !text.match(/^\d{2}\/\d{2}\/\d{4}$/)) { if
+        (lines[i+1]==="0000"||lines[i+1]==="0998"){nama=text;break;} }
+        }
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="font-weight:bold">${nama}</td>
+        <td class="nominal-in">${masuk}</td>
+        <td class="nominal-out">${keluar}</td>`;
+        tableBodyKlikBCA.appendChild(tr);
+        });
         });
 
         // ===== MY BCA =====
