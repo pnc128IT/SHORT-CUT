@@ -4,51 +4,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHORTCUT PANEL</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Poppins:wght@400;600;700;800&display=swap"
-        rel="stylesheet">
+    <title>SHORTCUT PANEL - PREMIUM EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Warna Gradasi Perak Mengkilap Persis Awal */
             --silver-gradient: linear-gradient(135deg, #cfd1d3 0%, #ffffff 45%, #9a9b9c 70%, #ffffff 100%);
-            --blue-glass: rgba(10, 30, 70, 0.45);
+            --blue-glass: rgba(10, 30, 70, 0.55);
+            --blue-panel: rgba(5, 15, 40, 0.85);
+            --blue-hover: rgba(10, 50, 100, 0.4);
+            --border-glow: rgba(200, 220, 255, 0.4);
             --success: #00ff88;
             --danger: #ff4d4d;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-image: url('https://m.gettywallpapers.com/wp-content/uploads/2024/05/Cute-Anime-PC-Wallpaper-4k.jpg') !important;
+            background-color: #0a0c12;
+            background-image: 
+                radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 40%),
+                linear-gradient(rgba(10, 12, 18, 0.1), rgba(10, 12, 18, 0.2)), 
+                url('https://m.gettywallpapers.com/wp-content/uploads/2024/05/Cute-Anime-PC-Wallpaper-4k.jpg') !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
             margin: 0;
             padding: 20px;
-            color: white;
+            color: #ffffff;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
-        body::before {
-            content: "";
+        /* -------------------------------------------------------------
+           CONTAINER EFEK GLITTER / SALJU JATUH
+        ------------------------------------------------------------- */
+        #glitter-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(circle, #8ac 1px, transparent 1px);
-            background-size: 80px 80px;
-            opacity: 0.15;
-            z-index: -1;
             pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
         }
 
+        .glitter-particle {
+            position: absolute;
+            top: -20px;
+            background: radial-gradient(circle, #ffffff 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px #ffffff, 0 0 18px rgba(255, 255, 255, 0.8);
+            animation: fall linear infinite, twinkle 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes twinkle {
+            0% { filter: brightness(0.8) scale(0.8); }
+            100% { filter: brightness(1.5) scale(1.2); }
+        }
+
+        /* -------------------------------------------------------------
+           MAIN MENU LAYOUT
+        ------------------------------------------------------------- */
         #main-menu {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 90vh;
+            position: relative;
+            z-index: 1;
         }
 
         .menu-title {
@@ -59,6 +97,7 @@
             border-radius: 20px;
             border: 2px solid rgba(180, 200, 255, 0.6);
             backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             box-shadow: 0 15px 50px rgba(0, 30, 70, 0.7), 0 0 25px rgba(200, 220, 255, 0.2);
             position: relative;
         }
@@ -67,21 +106,15 @@
         .menu-title::after {
             content: '♦';
             position: absolute;
-            color: #fff;
+            color: #ffffff;
             font-size: 20px;
-            text-shadow: 0 0 10px #fff;
+            text-shadow: 0 0 10px #ffffff;
         }
 
-        .menu-title::before {
-            top: 10px;
-            left: 10px;
-        }
+        .menu-title::before { top: 10px; left: 10px; }
+        .menu-title::after { bottom: 10px; right: 10px; }
 
-        .menu-title::after {
-            bottom: 10px;
-            right: 10px;
-        }
-
+        /* ✅ KEMBALIKAN ANIMASI TEKS KILAU PERAK JUDUL UTAMA */
         .menu-title h1 {
             font-family: 'Cinzel', serif;
             font-size: 3.8rem;
@@ -94,23 +127,18 @@
             letter-spacing: 4px;
             font-weight: 900;
             filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 1)) drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
-            animation: silverShine 4s linear infinite;
+            animation: silverShine 4s linear infinite !important;
         }
 
         @keyframes silverShine {
-            0% {
-                background-position: -200% center
-            }
-
-            100% {
-                background-position: 200% center
-            }
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
         }
 
         .menu-title p {
-            color: #fff;
+            color: #ffffff;
             font-weight: 700;
-            text-shadow: 2px 2px 10px #000;
+            text-shadow: 2px 2px 10px #000000;
             margin-top: 10px;
             letter-spacing: 2px;
             font-size: 1.1rem;
@@ -166,46 +194,24 @@
         }
 
         @keyframes logoPulse {
-
-            0%,
-            100% {
-                opacity: .5;
-                transform: translate(-50%, -50%) scale(1)
-            }
-
-            50% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.18)
-            }
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
         }
 
         @keyframes logoSpin {
-            from {
-                transform: translate(-50%, -50%) rotate(0deg)
-            }
-
-            to {
-                transform: translate(-50%, -50%) rotate(360deg)
-            }
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         @keyframes logoFloat {
-
-            0%,
-            100% {
-                transform: translate(-50%, -50%) translateY(0px)
-            }
-
-            50% {
-                transform: translate(-50%, -50%) translateY(-8px)
-            }
+            0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateY(-8px); }
         }
 
-        /* --- FIX: MENU SEJAJAR --- */
+        /* --- GRID MENU SEJAJAR --- */
         .grid-menu {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            /* Maksa 4 kolom sejajar */
             gap: 20px;
             width: 95%;
             max-width: 1400px;
@@ -217,9 +223,10 @@
             border-radius: 15px;
             text-align: center;
             cursor: pointer;
-            transition: all .5s cubic-bezier(.175, .885, .32, 1.275);
+            transition: all 0.5s cubic-bezier(.175, .885, .32, 1.275);
             border: 2px solid rgba(200, 220, 255, 0.4);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             box-shadow: 0 15px 40px rgba(0, 10, 30, 0.6);
             position: relative;
             overflow: hidden;
@@ -229,17 +236,12 @@
             justify-content: center;
         }
 
-        /* Responsive Mobile: Kalau layar kecil baru jadi tumpuk */
         @media (max-width: 1100px) {
-            .grid-menu {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .grid-menu { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 650px) {
-            .grid-menu {
-                grid-template-columns: 1fr;
-            }
+            .grid-menu { grid-template-columns: 1fr; }
         }
 
         .menu-card::before {
@@ -249,84 +251,86 @@
             left: 0;
             width: 30px;
             height: 30px;
-            background: linear-gradient(135deg, #fff 0%, transparent 70%);
-            opacity: .4;
+            background: linear-gradient(135deg, #ffffff 0%, transparent 70%);
+            opacity: 0.4;
         }
 
         .menu-card:hover {
             transform: translateY(-15px) scale(1.02);
-            background: rgba(10, 50, 100, 0.3);
+            background: var(--blue-hover);
             border-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
         }
 
+        /* ✅ KEMBALIKAN ANIMASI TEKS KILAU PERAK SUB-JUDUL CARD MENU */
         .menu-card h3 {
             margin: 15px 0 10px;
             font-weight: 800;
             font-size: 18px;
-            /* Dikecilkan dikit biar pas 4 kolom */
             text-transform: uppercase;
             letter-spacing: 1px;
             background: var(--silver-gradient);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: silverShine 3s linear infinite;
+            animation: silverShine 3s linear infinite !important;
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
         }
 
         .menu-card p {
-            color: #fff;
+            color: #ffffff;
             font-weight: 600;
-            text-shadow: 1px 1px 5px #000;
-            opacity: .9;
+            text-shadow: 1px 1px 5px #000000;
+            opacity: 0.9;
             font-size: 13px;
+            margin: 0;
         }
 
+        /* -------------------------------------------------------------
+           TOOL PANEL CONTAINER
+        ------------------------------------------------------------- */
         .container {
             display: none;
             max-width: 1200px;
             margin: 30px auto;
-            background: rgba(5, 15, 40, 0.8);
+            background: var(--blue-panel);
             padding: 45px;
             border-radius: 20px;
             backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 2px solid rgba(200, 220, 255, 0.4);
             box-shadow: 0 25px 70px rgba(0, 5, 20, 0.9);
-            animation: fadeIn .5s ease-out;
+            animation: fadeIn 0.5s ease-out;
             position: relative;
+            z-index: 1;
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .btn-back {
             background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            color: #ffffff;
             border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
             margin-bottom: 25px;
             font-weight: 700;
-            transition: .3s;
+            transition: 0.3s;
             text-transform: uppercase;
+            font-size: 13px;
         }
 
         .btn-back:hover {
-            background: #fff;
-            color: #000;
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
         }
 
+        /* ✅ KEMBALIKAN ANIMASI TEKS KILAU PERAK HEADER PANEL */
         header h2 {
             font-family: 'Cinzel', serif;
             background: var(--silver-gradient);
@@ -336,7 +340,8 @@
             text-align: center;
             font-size: 32px;
             margin-bottom: 40px;
-            animation: silverShine 4s linear infinite;
+            animation: silverShine 4s linear infinite !important;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9));
         }
 
         textarea {
@@ -345,27 +350,39 @@
             padding: 20px;
             border-radius: 12px;
             background: rgba(0, 10, 30, 0.7);
-            color: #fff;
+            color: #ffffff;
             border: 1px solid rgba(200, 220, 255, 0.4);
             font-family: 'Poppins', sans-serif;
+            font-size: 14px;
             box-sizing: border-box;
             outline: none;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            border-color: #ffffff;
+            box-shadow: 0 0 15px rgba(200, 220, 255, 0.3);
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0 50px;
         }
 
         .btn-copy {
-            background: linear-gradient(135deg, #9a9b9c 0%, #fff 50%, #666 100%);
-            color: #000;
+            background: linear-gradient(135deg, #9a9b9c 0%, #ffffff 50%, #666666 100%);
+            color: #000000;
             border: none;
             padding: 20px 45px;
             border-radius: 10px;
             cursor: pointer;
             font-weight: 900;
             font-size: 17px;
-            display: block;
-            margin: 30px auto 50px auto;
             text-transform: uppercase;
             box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-            transition: .3s;
+            transition: 0.3s;
         }
 
         .btn-copy:hover {
@@ -373,6 +390,28 @@
             box-shadow: 0 15px 40px rgba(255, 255, 255, 0.4);
         }
 
+        .btn-clear {
+            background: rgba(255, 77, 77, 0.25);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 77, 77, 0.5);
+            padding: 20px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 15px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-clear:hover {
+            background: rgba(255, 77, 77, 0.5);
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        /* -------------------------------------------------------------
+           TABLE STYLES
+        ------------------------------------------------------------- */
         .table-container {
             overflow-x: auto;
             border-radius: 12px;
@@ -388,17 +427,19 @@
 
         th {
             background: rgba(150, 150, 150, 0.15);
-            color: #fff;
+            color: #ffffff;
             padding: 22px 20px;
             text-align: left;
             text-transform: uppercase;
             border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 13px;
         }
 
         td {
             padding: 18px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            color: #fff !important;
+            color: #ffffff !important;
+            font-size: 14px;
         }
 
         .bank-badge {
@@ -418,6 +459,33 @@
             font-weight: 800;
         }
 
+        /* Toast Notifikasi Melayang */
+        #toast {
+            visibility: hidden;
+            min-width: 260px;
+            background-color: #ffffff;
+            color: #000000;
+            text-align: center;
+            border-radius: 10px;
+            padding: 14px 20px;
+            position: fixed;
+            z-index: 10000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-weight: 800;
+            font-size: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(255,255,255,0.5);
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
         ::-webkit-scrollbar {
             width: 10px;
             height: 10px;
@@ -428,13 +496,19 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #9a9b9c, #fff);
+            background: linear-gradient(180deg, #9a9b9c, #ffffff);
             border-radius: 10px;
         }
     </style>
 </head>
 
 <body>
+
+    <!-- Container Glitter Jatuh -->
+    <div id="glitter-container"></div>
+
+    <!-- Toast Notifikasi Melayang -->
+    <div id="toast">✨ DATA BERHASIL DISALIN!</div>
 
     <div id="main-menu">
         <div class="menu-title">
@@ -477,13 +551,17 @@
         </div>
     </div>
 
+    <!-- SHORTCUT WD IDN -->
     <div id="wd-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
             <h2>SHORTCUT WD IDN</h2>
         </header>
         <textarea id="inputWD" placeholder="Tempel data WD di sini..."></textarea>
-        <button class="btn-copy" onclick="copyData('tableBodyWD')">✨ Salin Data WD!</button>
+        <div class="action-bar">
+            <button class="btn-copy" onclick="copyData('tableBodyWD')">✨ Salin Data WD!</button>
+            <button class="btn-clear" onclick="clearTool('inputWD', 'tableBodyWD')">🗑️ Bersihkan</button>
+        </div>
         <div class="table-container">
             <table>
                 <thead>
@@ -500,13 +578,17 @@
         </div>
     </div>
 
+    <!-- SHORTCUT WD PNG -->
     <div id="wdpng-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
             <h2>SHORTCUT WD PNG</h2>
         </header>
         <textarea id="inputWDPNG" placeholder="Tempel data WD PNG di sini..."></textarea>
-        <button class="btn-copy" onclick="copyData('tableBodyWDPNG')">✨ Salin Data WD PNG!</button>
+        <div class="action-bar">
+            <button class="btn-copy" onclick="copyData('tableBodyWDPNG')">✨ Salin Data WD PNG!</button>
+            <button class="btn-clear" onclick="clearTool('inputWDPNG', 'tableBodyWDPNG')">🗑️ Bersihkan</button>
+        </div>
         <div class="table-container">
             <table>
                 <thead>
@@ -523,13 +605,17 @@
         </div>
     </div>
 
+    <!-- SHORTCUT DP KLIK BCA -->
     <div id="klikbca-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
             <h2>SHORTCUT DP KLIK BCA</h2>
         </header>
         <textarea id="inputKlikBCA" placeholder="Tempel mutasi Klik BCA di sini..."></textarea>
-        <button class="btn-copy" onclick="copyData('tableBodyKlikBCA')">✨ Salin Data KLIK BCA!</button>
+        <div class="action-bar">
+            <button class="btn-copy" onclick="copyData('tableBodyKlikBCA')">✨ Salin Data KLIK BCA!</button>
+            <button class="btn-clear" onclick="clearTool('inputKlikBCA', 'tableBodyKlikBCA')">🗑️ Bersihkan</button>
+        </div>
         <div class="table-container">
             <table>
                 <thead>
@@ -544,13 +630,17 @@
         </div>
     </div>
 
+    <!-- SHORTCUT DP MY BCA -->
     <div id="mybca-container" class="container">
         <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
         <header>
             <h2>SHORTCUT DP MY BCA</h2>
         </header>
         <textarea id="inputMyBCA" placeholder="Tempel mutasi MyBCA di sini..."></textarea>
-        <button class="btn-copy" onclick="copyData('tableBodyMyBCA')">✨ Salin Data MyBCA!</button>
+        <div class="action-bar">
+            <button class="btn-copy" onclick="copyData('tableBodyMyBCA')">✨ Salin Data MyBCA!</button>
+            <button class="btn-clear" onclick="clearTool('inputMyBCA', 'tableBodyMyBCA')">🗑️ Bersihkan</button>
+        </div>
         <div class="table-container">
             <table>
                 <thead>
@@ -566,17 +656,50 @@
     </div>
 
     <script>
+        // --- EFEK GLITTER JATUH ---
+        function createGlitter() {
+            const container = document.getElementById('glitter-container');
+            const particleCount = 45;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('glitter-particle');
+                const size = Math.random() * 5 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                const duration = Math.random() * 6 + 4;
+                particle.style.animationDuration = `${duration}s, 1.5s`;
+                particle.style.animationDelay = `${Math.random() * 5}s, 0s`;
+                container.appendChild(particle);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', createGlitter);
+
+        // --- NAVIGASI PANEL ---
         function openTool(id) {
             document.getElementById('main-menu').style.display = 'none';
             document.getElementById(id).style.display = 'block';
             window.scrollTo(0, 0);
         }
+
         function backToMenu() {
             document.getElementById('main-menu').style.display = 'flex';
             document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
         }
 
-        // ===== WD IDN =====
+        function clearTool(inputId, tableBodyId) {
+            document.getElementById(inputId).value = "";
+            document.getElementById(tableBodyId).innerHTML = "";
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2500);
+        }
+
+        // ===== WD IDN (PERSI DENGAN LOGIKA ASLI) =====
         document.getElementById('inputWD').addEventListener('input', function () {
             const val = this.value.trim();
             const tableBodyWD = document.getElementById('tableBodyWD');
@@ -596,12 +719,12 @@
                 let rek = bankDataMatch ? bankDataMatch[2].trim() : "";
                 let nama = bankDataMatch ? bankDataMatch[3].replace(/\d+$/, '').trim() : "";
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><span class="bank-badge">${bank}</span></td><td>${rek}</td><td style="color:#fff;font-weight:bold">${userId}</td><td>${nama}</td><td>${nominal}</td>`;
+                tr.innerHTML = `<td><span class="bank-badge">${bank}</span></td><td>${rek}</td><td style="color:#ffffff;font-weight:bold">${userId}</td><td>${nama}</td><td>${nominal}</td>`;
                 tableBodyWD.appendChild(tr);
             }
         });
 
-        // ===== WD PNG =====
+        // ===== WD PNG (PERSI DENGAN LOGIKA ASLI) =====
         document.getElementById('inputWDPNG').addEventListener('input', function () {
             const val = this.value.trim();
             const tableBodyWDPNG = document.getElementById('tableBodyWDPNG');
@@ -631,7 +754,7 @@
                 tr.innerHTML = `
                     <td><span class="bank-badge">${bank}</span></td>
                     <td>${noRek}</td>
-                    <td style="color:#fff;font-weight:bold">${userId}</td>
+                    <td style="color:#ffffff;font-weight:bold">${userId}</td>
                     <td>${nama}</td>
                     <td>${jumlah}</td>
                 `;
@@ -639,159 +762,175 @@
             });
         });
 
-// ===== KLIK BCA (DIPERBAIKI) =====
-document.getElementById('inputKlikBCA').addEventListener('input', function () {
-const val = this.value.trim();
-const tableBodyKlikBCA = document.getElementById('tableBodyKlikBCA');
-if (!val) { tableBodyKlikBCA.innerHTML = ""; return; }
-tableBodyKlikBCA.innerHTML = "";
+        // ===== KLIK BCA (PERSI DENGAN LOGIKA ASLI) =====
+        document.getElementById('inputKlikBCA').addEventListener('input', function () {
+            const val = this.value.trim();
+            const tableBodyKlikBCA = document.getElementById('tableBodyKlikBCA');
+            if (!val) { tableBodyKlikBCA.innerHTML = ""; return; }
+            tableBodyKlikBCA.innerHTML = "";
 
-// Pisah per transaksi: utamakan pemisah "PEND" (format baru),
-// fallback ke pemisah tanggal (format lama) kalau "PEND" tidak ada.
-let blocks;
-if (/(?:^|\n)PEND\n/.test(val) || val.startsWith('PEND')) {
-blocks = val.split(/(?:^|\n)PEND\n/m).map(b => b.trim()).filter(b => b.length > 5);
-} else {
-blocks = val.split(/\n(?=\d{1,2}\/\d{2}\/\d{4})/);
-}
+            let blocks;
+            if (/(?:^|\n)PEND\n/.test(val) || val.startsWith('PEND')) {
+                blocks = val.split(/(?:^|\n)PEND\n/m).map(b => b.trim()).filter(b => b.length > 5);
+            } else {
+                blocks = val.split(/\n(?=\d{1,2}\/\d{2}\/\d{4})/);
+            }
 
-blocks.forEach(block => {
-const cleanBlock = block.trim();
-if (cleanBlock.length < 10) return; const lines=cleanBlock.split('\n').map(l=> l.trim()).filter(l => l.length > 0);
-    let nama = "TIDAK TERDETEKSI"; let masuk = ""; let keluar = "";
+            blocks.forEach(block => {
+                const cleanBlock = block.trim();
+                if (cleanBlock.length < 10) return; 
+                const lines = cleanBlock.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                let nama = "TIDAK TERDETEKSI"; let masuk = ""; let keluar = "";
 
-    const typeIndex = lines.findIndex(l => l === "CR" || l === "DB");
-    if (typeIndex === -1) return;
-    const tipe = lines[typeIndex];
-    const nominal = lines[typeIndex - 1] || "";
-    if (tipe === "CR") masuk = nominal; else keluar = nominal;
+                const typeIndex = lines.findIndex(l => l === "CR" || l === "DB");
+                if (typeIndex === -1) return;
+                const tipe = lines[typeIndex];
+                const nominal = lines[typeIndex - 1] || "";
+                if (tipe === "CR") masuk = nominal; else keluar = nominal;
 
-    // Patokan utama: baris kode "0000"/"0998" — nama ada tepat di atasnya
-    const codeIndex = lines.findIndex(l => l === "0000" || l === "0998");
-    if (codeIndex > 0) {
-    let candidate = lines[codeIndex - 1];
+                const codeIndex = lines.findIndex(l => l === "0000" || l === "0998");
+                if (codeIndex > 0) {
+                    let candidate = lines[codeIndex - 1];
+                    if (/TRANSFER DR|TRANSFER KE/i.test(candidate)) {
+                        const keyword = /TRANSFER DR/i.test(candidate) ? "TRANSFER DR" : "TRANSFER KE";
+                        const idx = candidate.toUpperCase().indexOf(keyword);
+                        let after = candidate.slice(idx + keyword.length).trim();
+                        after = after.replace(/^\d+\s*/, '');
+                        candidate = after;
+                    }
+                    if (candidate && !/^\d+([.,]\d+)?$/.test(candidate) && !/^[\d\/]+$/.test(candidate)) {
+                        nama = candidate.trim();
+                    }
+                }
 
-    // Kasus BI-FAST / SWITCHING: nama menyatu dalam kalimat "TRANSFER DR/KE ..."
-    if (/TRANSFER DR|TRANSFER KE/i.test(candidate)) {
-    const keyword = /TRANSFER DR/i.test(candidate) ? "TRANSFER DR" : "TRANSFER KE";
-    const idx = candidate.toUpperCase().indexOf(keyword);
-    let after = candidate.slice(idx + keyword.length).trim();
-    after = after.replace(/^\d+\s*/, '');
-    candidate = after;
-    }
+                if (nama === "TIDAK TERDETEKSI") {
+                    for (let i = 0; i < typeIndex; i++) { 
+                        const text = lines[i]; 
+                        if (/^SWITCHING\s+(DB|CR)\s+TRF\s+/i.test(text)) { 
+                            const m = text.match(/^SWITCHING\s+(?:DB|CR)\s+TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MYBCA|\s+BCA|$)/i); 
+                            if (m) { nama = m[1].trim(); break; } 
+                        } 
+                        if (/^SWITCHING\s+DB\s+BIAYA/i.test(text)) { 
+                            const m = text.match(/BIAYA\s+TXN\s+KE\s+\d+\s+(.+?)(?:\s+MYBCA|\s+BCA|$)/i); 
+                            if (m) { nama = m[1].trim(); break; } 
+                        } 
+                        if (/^TRSF E-BANKING/i.test(text) && /WS\d+/.test(text)) { 
+                            const m = text.match(/WS\d+\s+[\d.]+\s+(.+?)$/i); 
+                            if (m) { nama = m[1].trim(); break; } 
+                        } 
+                        if (/^TRSF E-BANKING/i.test(text) && !/WS\d+/.test(text)) { 
+                            const m = text.match(/TRSF\s+E-BANKING\s+(?:CR|DB)\s+[\d\/]+\s+\S+\s+(.+?)$/i); 
+                            if (m) { nama = m[1].trim(); break; } 
+                        } 
+                        if (text.includes("TRANSFER DR") || text.includes("TRANSFER KE")) { 
+                            const keyword = text.includes("TRANSFER DR") ? "TRANSFER DR" : "TRANSFER KE"; 
+                            nama = text.split(keyword)[1].trim().replace(/^\d+\s*/, ''); 
+                            break; 
+                        } 
+                        if (text.includes("TRFDN-")) { 
+                            nama = text.replace("TRFDN-", "").trim(); 
+                            break; 
+                        } 
+                        if (text.length > 3 && !text.match(/^\d+$/) && !text.match(/^\d{1,3}(,\d{3})*\.\d{2}$/) && !text.match(/^\d{2}\/\d{2}\/\d{4}$/)) { 
+                            if (lines[i+1] === "0000" || lines[i+1] === "0998") { nama = text; break; } 
+                        }
+                    }
+                }
 
-    if (candidate && !/^\d+([.,]\d+)?$/.test(candidate) && !/^[\d\/]+$/.test(candidate)) {
-    nama = candidate.trim();
-    }
-    }
-
-    // Fallback ke logika lama (format tanpa baris kode "0000")
-    if (nama === "TIDAK TERDETEKSI") {
-    for (let i = 0; i < typeIndex; i++) { const text=lines[i]; if (/^SWITCHING\s+(DB|CR)\s+TRF\s+/i.test(text)) { const
-        m=text.match(/^SWITCHING\s+(?:DB|CR)\s+TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MYBCA|\s+BCA|$)/i); if (m) {
-        nama=m[1].trim(); break; } } if (/^SWITCHING\s+DB\s+BIAYA/i.test(text)) { const
-        m=text.match(/BIAYA\s+TXN\s+KE\s+\d+\s+(.+?)(?:\s+MYBCA|\s+BCA|$)/i); if (m) { nama=m[1].trim(); break; } } if
-        (/^TRSF E-BANKING/i.test(text) && /WS\d+/.test(text)) { const m=text.match(/WS\d+\s+[\d.]+\s+(.+?)$/i); if (m) {
-        nama=m[1].trim(); break; } } if (/^TRSF E-BANKING/i.test(text) && !/WS\d+/.test(text)) { const
-        m=text.match(/TRSF\s+E-BANKING\s+(?:CR|DB)\s+[\d\/]+\s+\S+\s+(.+?)$/i); if (m) { nama=m[1].trim(); break; } } if
-        (text.includes("TRANSFER DR") || text.includes("TRANSFER KE")) { const keyword=text.includes("TRANSFER DR")
-        ? "TRANSFER DR" : "TRANSFER KE" ; nama=text.split(keyword)[1].trim().replace(/^\d+\s*/, '' ); break; } if
-        (text.includes("TRFDN-")) { nama=text.replace("TRFDN-", "" ).trim(); break; } if (text.length> 3 &&
-        !text.match(/^\d+$/) && !text.match(/^\d{1,3}(,\d{3})*\.\d{2}$/) && !text.match(/^\d{2}\/\d{2}\/\d{4}$/)) { if
-        (lines[i+1]==="0000"||lines[i+1]==="0998"){nama=text;break;} }
-        }
-        }
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td style="font-weight:bold">${nama}</td>
-        <td class="nominal-in">${masuk}</td>
-        <td class="nominal-out">${keluar}</td>`;
-        tableBodyKlikBCA.appendChild(tr);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td style="font-weight:bold">${nama}</td>
+                <td class="nominal-in">${masuk}</td>
+                <td class="nominal-out">${keluar}</td>`;
+                tableBodyKlikBCA.appendChild(tr);
+            });
         });
-        });
 
-        // ===== MY BCA =====
+        // ===== MY BCA (PERSI DENGAN LOGIKA ASLI) =====
         document.getElementById('inputMyBCA').addEventListener('input', function () {
-        const val = this.value.trim();
-        const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
-        if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
-        tableBodyMyBCA.innerHTML = "";
-        
-        // Split berdasarkan "PEND" ATAU tanggal (support kedua format)
-        let blocks;
-        if (/(?:^|\n)PEND\n/.test(val) || val.startsWith('PEND')) {
-        blocks = val.split(/(?:^|\n)PEND\n/m).map(b => b.trim()).filter(b => b.length > 5);
-        } else {
-        blocks = val.split(/\n(?=\d{1,2} [A-Za-z]+ \d{4})/);
-        }
-        
-        blocks.forEach(block => {
-        const text = block.trim();
-        if (text.length < 5) return; let nama="TIDAK TERDETEKSI" ; let masuk="" ; let keluar="" ; const
-            allIDR=[...text.matchAll(/IDR\s*([\d,]+\.\d{2})/g)]; const nominal=allIDR.length> 0 ? allIDR[0][1] : "";
-        
-            const isCR = /TRSF E-BANKING CR|BI-FAST CR|SWITCHING CR/i.test(text);
-            const isDB = /TRSF E-BANKING DB|BI-FAST DB|SWITCHING DB/i.test(text);
-            if (isCR) masuk = nominal;
-            else if (isDB) keluar = nominal;
-        
-            if (/TRSF E-BANKING/i.test(text)) {
-            // ✅ FIX: Nama ada setelah "WS##### angka.angka"
-            const mWS = text.match(/WS\d+\s+[\d.]+\s+([A-Z][A-Z\s]+?)(?:\s+IDR|\s*\t|\s*$)/i);
-            if (mWS) { nama = mWS[1].trim(); return appendRow(); }
-            const m1 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\w\/]+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
-            if (m1) { nama = m1[1].trim(); return appendRow(); }
+            const val = this.value.trim();
+            const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
+            if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
+            tableBodyMyBCA.innerHTML = "";
+            
+            let blocks;
+            if (/(?:^|\n)PEND\n/.test(val) || val.startsWith('PEND')) {
+                blocks = val.split(/(?:^|\n)PEND\n/m).map(b => b.trim()).filter(b => b.length > 5);
+            } else {
+                blocks = val.split(/\n(?=\d{1,2} [A-Za-z]+ \d{4})/);
             }
-            if (/SWITCHING CR/i.test(text)) {
-            const m = text.match(/SWITCHING CR\s*-\s*TRF\s+(.+?)(?:\s+\d{3}\s+|\s+SMB|\s+MBKBKE|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-            if (m) { nama = m[1].trim(); return appendRow(); }
-            const m2 = text.match(/SWITCHING CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-            if (m2) { nama = m2[1].trim(); return appendRow(); }
-            }
-            if (/SWITCHING DB/i.test(text)) {
-            const m = text.match(/TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-            if (m) { nama = m[1].trim(); return appendRow(); }
-            }
-            if (/TRFDN-/i.test(text)) {
-            const m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+IDR|\t|$)/i);
-            if (m) { nama = m[1].trim(); return appendRow(); }
-            }
-            if (/BI-FAST CR/i.test(text)) {
-            const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
-            if (m) { nama = m[1].trim(); return appendRow(); }
-            const m2 = text.match(/BI-FAST CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-            if (m2) { nama = m2[1].trim(); return appendRow(); }
-            }
-            if (/BI-FAST DB/i.test(text)) {
-            const m = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
-            if (m) { nama = m[1].trim(); return appendRow(); }
-            const m3 = text.match(/BI-FAST DB\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-            if (m3) { nama = m3[1].trim(); return appendRow(); }
-            }
-        
-            appendRow();
-        
-            function appendRow() {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td style="font-weight:bold">${nama}</td>
-            <td class="nominal-in">${masuk}</td>
-            <td class="nominal-out">${keluar}</td>`;
-            tableBodyMyBCA.appendChild(tr);
-            }
+            
+            blocks.forEach(block => {
+                const text = block.trim();
+                if (text.length < 5) return; 
+                let nama = "TIDAK TERDETEKSI"; let masuk = ""; let keluar = ""; 
+                const allIDR = [...text.matchAll(/IDR\s*([\d,]+\.\d{2})/g)]; 
+                const nominal = allIDR.length > 0 ? allIDR[0][1] : "";
+            
+                const isCR = /TRSF E-BANKING CR|BI-FAST CR|SWITCHING CR/i.test(text);
+                const isDB = /TRSF E-BANKING DB|BI-FAST DB|SWITCHING DB/i.test(text);
+                if (isCR) masuk = nominal;
+                else if (isDB) keluar = nominal;
+            
+                if (/TRSF E-BANKING/i.test(text)) {
+                    const mWS = text.match(/WS\d+\s+[\d.]+\s+([A-Z][A-Z\s]+?)(?:\s+IDR|\s*\t|\s*$)/i);
+                    if (mWS) { nama = mWS[1].trim(); return appendRow(); }
+                    const m1 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\w\/]+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m1) { nama = m1[1].trim(); return appendRow(); }
+                }
+                if (/SWITCHING CR/i.test(text)) {
+                    const m = text.match(/SWITCHING CR\s*-\s*TRF\s+(.+?)(?:\s+\d{3}\s+|\s+SMB|\s+MBKBKE|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                    const m2 = text.match(/SWITCHING CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m2) { nama = m2[1].trim(); return appendRow(); }
+                }
+                if (/SWITCHING DB/i.test(text)) {
+                    const m = text.match(/TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                }
+                if (/TRFDN-/i.test(text)) {
+                    const m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+IDR|\t|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                }
+                if (/BI-FAST CR/i.test(text)) {
+                    const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                    const m2 = text.match(/BI-FAST CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m2) { nama = m2[1].trim(); return appendRow(); }
+                }
+                if (/BI-FAST DB/i.test(text)) {
+                    const m = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
+                    if (m) { nama = m[1].trim(); return appendRow(); }
+                    const m3 = text.match(/BI-FAST DB\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
+                    if (m3) { nama = m3[1].trim(); return appendRow(); }
+                }
+            
+                appendRow();
+            
+                function appendRow() {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td style="font-weight:bold">${nama}</td>
+                    <td class="nominal-in">${masuk}</td>
+                    <td class="nominal-out">${keluar}</td>`;
+                    tableBodyMyBCA.appendChild(tr);
+                }
             });
-            });
+        });
 
+        // --- SALIN DATA KE CLIPBOARD ---
         async function copyData(tableId) {
             const body = document.getElementById(tableId);
             const rows = body.querySelectorAll('tr');
-            if (rows.length === 0) { alert("⚠️ Tidak ada data untuk disalin!"); return; }
+            if (rows.length === 0) { 
+                showToast("⚠️ Tidak ada data untuk disalin!"); 
+                return; 
+            }
             let output = "";
             rows.forEach(row => {
                 const rowData = Array.from(row.querySelectorAll('td')).map(c => c.innerText.trim()).join('\t');
                 output += rowData + '\n';
             });
             await navigator.clipboard.writeText(output);
-            alert("✅ DATA BERHASIL DISALIN!");
+            showToast("✨ DATA BERHASIL DISALIN!");
         }
     </script>
 
