@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHORTCUT PANEL</title>
+    <title>SHORTCUT PANEL - PREMIUM EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -27,7 +27,7 @@
             background-color: #0a0c12;
             background-image: 
                 radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 40%),
-                linear-gradient(rgba(10, 12, 18, 0.1), rgba(10, 12, 18, 0.1)), 
+                linear-gradient(rgba(10, 12, 18, 0.1), rgba(10, 12, 18, 0.2)), 
                 url('https://m.gettywallpapers.com/wp-content/uploads/2024/05/Cute-Anime-PC-Wallpaper-4k.jpg') !important;
             background-size: cover !important;
             background-position: center !important;
@@ -845,76 +845,97 @@
             });
         });
 
-        // ===== MY BCA (PERSI DENGAN LOGIKA ASLI) =====
-        document.getElementById('inputMyBCA').addEventListener('input', function () {
-            const val = this.value.trim();
-            const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
-            if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
-            tableBodyMyBCA.innerHTML = "";
-            
-            let blocks;
-            if (/(?:^|\n)PEND\n/.test(val) || val.startsWith('PEND')) {
-                blocks = val.split(/(?:^|\n)PEND\n/m).map(b => b.trim()).filter(b => b.length > 5);
-            } else {
-                blocks = val.split(/\n(?=\d{1,2} [A-Za-z]+ \d{4})/);
+        // ===== MY BCA (VERSI PERBAIKAN LOGIKA & PEMBERSIHAN NAMA) =====
+document.getElementById('inputMyBCA').addEventListener('input', function () {
+    const val = this.value.trim();
+    const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
+    if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
+    tableBodyMyBCA.innerHTML = "";
+
+    // 1. Pemisahan baris transaksi berdasarkan pola Tanggal (e.g., "8 Aug 2026" / "08 Aug 2026")
+    let rawBlocks = val.split(/(?=\b\d{1,2}\s+[A-Za-z]{3,}\s+\d{4}\b)/);
+
+    rawBlocks.forEach(block => {
+        let text = block.trim();
+        if (text.length < 10) return;
+
+        let nama = "TIDAK TERDETEKSI";
+        let masuk = "";
+        let keluar = "";
+
+        // 2. Tentukan Tipe (CR / DB)
+        const isCR = /\bCR\b/i.test(text);
+        const isDB = /\bDB\b/i.test(text);
+
+        // 3. Ambil Nominal Transaksi Pertama (IDR X,XXX.XX)
+        const allIDR = [...text.matchAll(/IDR\s*([\d,]+\.\d{2})/gi)];
+        const nominal = allIDR.length > 0 ? allIDR[0][1] : "";
+
+        if (isCR) masuk = nominal;
+        else if (isDB) keluar = nominal;
+
+        // 4. LOGIKA EKSTRAKSI & PEMBERSIHAN NAMA
+
+        // Case A: Format TRFDN / ESPAY (Hilangkan Angka ID Unik & Suffix ESPAY DEBIT...)
+        if (/TRFDN-/i.test(text)) {
+            let m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+DEBIT|\s+IDR|\t|$)/i);
+            if (m) {
+                // Bersihkan jika ada sisa angka unik di depan nama
+                nama = m[1].replace(/^\d+\s*/, '').trim();
             }
-            
-            blocks.forEach(block => {
-                const text = block.trim();
-                if (text.length < 5) return; 
-                let nama = "TIDAK TERDETEKSI"; let masuk = ""; let keluar = ""; 
-                const allIDR = [...text.matchAll(/IDR\s*([\d,]+\.\d{2})/g)]; 
-                const nominal = allIDR.length > 0 ? allIDR[0][1] : "";
-            
-                const isCR = /TRSF E-BANKING CR|BI-FAST CR|SWITCHING CR/i.test(text);
-                const isDB = /TRSF E-BANKING DB|BI-FAST DB|SWITCHING DB/i.test(text);
-                if (isCR) masuk = nominal;
-                else if (isDB) keluar = nominal;
-            
-                if (/TRSF E-BANKING/i.test(text)) {
-                    const mWS = text.match(/WS\d+\s+[\d.]+\s+([A-Z][A-Z\s]+?)(?:\s+IDR|\s*\t|\s*$)/i);
-                    if (mWS) { nama = mWS[1].trim(); return appendRow(); }
-                    const m1 = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\w\/]+\s+[\d.]+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m1) { nama = m1[1].trim(); return appendRow(); }
-                }
-                if (/SWITCHING CR/i.test(text)) {
-                    const m = text.match(/SWITCHING CR\s*-\s*TRF\s+(.+?)(?:\s+\d{3}\s+|\s+SMB|\s+MBKBKE|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                    const m2 = text.match(/SWITCHING CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m2) { nama = m2[1].trim(); return appendRow(); }
-                }
-                if (/SWITCHING DB/i.test(text)) {
-                    const m = text.match(/TRF\s+(.+?)(?:\s+\d{3}\s+|\s+MyBCA|\s+BCA|\s+IDR|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                }
-                if (/TRFDN-/i.test(text)) {
-                    const m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+IDR|\t|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                }
-                if (/BI-FAST CR/i.test(text)) {
-                    const m = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                    const m2 = text.match(/BI-FAST CR\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m2) { nama = m2[1].trim(); return appendRow(); }
-                }
-                if (/BI-FAST DB/i.test(text)) {
-                    const m = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s+IDR|\t|$)/i);
-                    if (m) { nama = m[1].trim(); return appendRow(); }
-                    const m3 = text.match(/BI-FAST DB\s*-\s*(.+?)(?:\s+IDR|\t|$)/i);
-                    if (m3) { nama = m3[1].trim(); return appendRow(); }
-                }
-            
-                appendRow();
-            
-                function appendRow() {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td style="font-weight:bold">${nama}</td>
-                    <td class="nominal-in">${masuk}</td>
-                    <td class="nominal-out">${keluar}</td>`;
-                    tableBodyMyBCA.appendChild(tr);
-                }
-            });
-        });
+        }
+
+        // Case B: Format GoPay / Dompet Anak Bangsa
+        else if (/GoPay|DOMPET ANAK BANGSA/i.test(text)) {
+            // Ambil "DOMPET ANAK BANGSA" atau nama pengirim GoPay jika ada
+            if (text.includes("DOMPET ANAK BANGSA")) {
+                nama = "DOMPET ANAK BANGSA";
+            } else {
+                let m = text.match(/GoPay\s+([A-Za-z\s]+?)(?:\s+ID\d+|\s+IDR|\t|$)/i);
+                if (m) nama = m[1].trim();
+            }
+        }
+
+        // Case C: BI-FAST (TRANSFER DR / TRANSFER KE)
+        else if (/BI-FAST/i.test(text)) {
+            let mDr = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s*IDR|\t|$)/i);
+            let mKe = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s*IDR|\t|$)/i);
+
+            if (mDr) nama = mDr[1].trim();
+            else if (mKe) nama = mKe[1].trim();
+        }
+
+        // Case D: TRSF E-BANKING dengan WS/FTSCY
+        else if (/WS\d+/i.test(text)) {
+            let m = text.match(/WS\d+\s+[\d.]+\s+(.+?)(?:\s*IDR|\t|$)/i);
+            if (m) nama = m[1].trim();
+        }
+
+        // Case E: TRSF E-BANKING dengan Kode Unik Tanggal (e.g., 08/08 Z96R1 AGUS KAMBALI)
+        else if (/TRSF E-BANKING/i.test(text)) {
+            let m = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\d\/]+\s+[A-Z0-9]+\s+(.+?)(?:\s*IDR|\t|$)/i);
+            if (m) {
+                nama = m[1].trim();
+            } else {
+                // Fallback untuk format umum TRSF E-BANKING lainnya
+                let mGen = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*.+?\s+([A-Z\s]{3,})(?:\s*IDR|\t|$)/i);
+                if (mGen) nama = mGen[1].trim();
+            }
+        }
+
+        // 5. Pembersihan Tambahan (Remove IDR/Sisa Teks yang Terikut)
+        nama = nama.replace(/IDR.*$/i, '').trim();
+
+        // Render Baris Tabel
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td style="font-weight:bold">${nama}</td>
+            <td class="nominal-in">${masuk}</td>
+            <td class="nominal-out">${keluar}</td>
+        `;
+        tableBodyMyBCA.appendChild(tr);
+    });
+});
 
         // --- SALIN DATA KE CLIPBOARD ---
         async function copyData(tableId) {
