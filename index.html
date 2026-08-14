@@ -548,6 +548,14 @@
                 <p>Filter mutasi MyBCA</p>
             </div>
 
+            <div class="menu-card" onclick="openExternalLink('https://pnc128it.github.io/REKAPAN-BANK-STATEMENT/')">
+                <!-- GANTI URL GAMBAR DI BAWAH INI DENGAN LOGO PILIHAN ANDA -->
+                <img src="https://cdn-icons-png.flaticon.com/512/12142/12142876.png"
+                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto">
+                <h3>REKAPAN BANK STATEMENT</h3>
+                <p>Tools rekapan bank statement</p>
+            </div>
+
         </div>
     </div>
 
@@ -685,6 +693,11 @@
         function backToMenu() {
             document.getElementById('main-menu').style.display = 'flex';
             document.querySelectorAll('.container').forEach(c => c.style.display = 'none');
+        }
+
+        // --- BUKA LINK EKSTERNAL DI TAB BARU ---
+        function openExternalLink(url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
         }
 
         function clearTool(inputId, tableBodyId) {
