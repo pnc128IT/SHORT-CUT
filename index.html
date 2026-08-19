@@ -4,19 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHORTCUT PANEL - HUT RI EDITION</title>
+    <title>SHORTCUT PANEL - SPACE CYBER EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Warna Merah-Putih & Aksen Kemerdekaan */
-            --merah-gradient: linear-gradient(135deg, #FF1744 0%, #FFFFFF 50%, #FF1744 100%);
-            --merah-glass: rgba(140, 10, 20, 0.75);
-            --merah-panel: rgba(90, 5, 12, 0.90);
-            --merah-hover: rgba(190, 20, 35, 0.65);
-            --border-glow: rgba(255, 77, 77, 0.5);
-            --success: #00ff88;
-            --danger: #ff6b6b;
-            --emas-garuda: #FFD700;
+            /* Warna Akses Tema Space & Cyber Neon */
+            --cyan-glow: #00f0ff;
+            --purple-glow: #bd00ff;
+            --neon-gradient: linear-gradient(135deg, #00f0ff 0%, #ffffff 50%, #bd00ff 100%);
+            --panel-glass: rgba(12, 16, 38, 0.75);
+            --panel-bg: rgba(8, 11, 28, 0.90);
+            --panel-hover: rgba(25, 35, 75, 0.75);
+            --border-glow: rgba(0, 240, 255, 0.4);
+            --success: #00ffaa;
+            --danger: #ff3366;
         }
 
         * {
@@ -25,11 +26,11 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #3b0307;
+            background-color: #050714;
             background-image: 
-                radial-gradient(circle at top right, rgba(255, 23, 68, 0.2), transparent 40%),
-                linear-gradient(rgba(50, 4, 8, 0.1), rgba(30, 2, 5, 0.2)), 
-                url('https://i.postimg.cc/htwXqpVn/fcb3c736-e3c2-4a05-bdcb-8224f8775ce8.jpg') !important;
+                radial-gradient(circle at top right, rgba(189, 0, 255, 0.25), transparent 45%),
+                linear-gradient(rgba(5, 7, 20, 0.1), rgba(5, 7, 20, 0.2)), 
+                url('https://images6.alphacoders.com/139/1396087.webp') !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
@@ -42,7 +43,7 @@
         }
 
         /* -------------------------------------------------------------
-           CONTAINER EFEK GLITTER JATUH (KHUSUS MERAH & PUTIH)
+           CONTAINER EFEK STARDUST / GLITTER SPACE
         ------------------------------------------------------------- */
         #glitter-container {
             position: fixed;
@@ -63,16 +64,16 @@
             animation: fall linear infinite, twinkle 1.5s ease-in-out infinite alternate;
         }
 
-        /* Particle Putih */
+        /* Particle Cyan Glow */
         .glitter-particle.white {
-            background: radial-gradient(circle, #ffffff 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
-            box-shadow: 0 0 10px #ffffff, 0 0 18px rgba(255, 255, 255, 0.8);
+            background: radial-gradient(circle, #00f0ff 0%, rgba(0, 240, 255, 0.8) 50%, transparent 100%);
+            box-shadow: 0 0 10px #00f0ff, 0 0 18px rgba(0, 240, 255, 0.8);
         }
 
-        /* Particle Merah */
+        /* Particle Purple Glow */
         .glitter-particle.red {
-            background: radial-gradient(circle, #ff3344 0%, rgba(255, 51, 68, 0.8) 50%, transparent 100%);
-            box-shadow: 0 0 10px #ff3344, 0 0 18px rgba(255, 51, 68, 0.8);
+            background: radial-gradient(circle, #e052ff 0%, rgba(224, 82, 255, 0.8) 50%, transparent 100%);
+            box-shadow: 0 0 10px #e052ff, 0 0 18px rgba(224, 82, 255, 0.8);
         }
 
         @keyframes fall {
@@ -84,11 +85,11 @@
 
         @keyframes twinkle {
             0% { filter: brightness(0.8) scale(0.8); }
-            100% { filter: brightness(1.5) scale(1.2); }
+            100% { filter: brightness(1.6) scale(1.3); }
         }
 
         /* -------------------------------------------------------------
-           MAIN MENU LAYOUT (TEMA MERAH PUTIH)
+           MAIN MENU LAYOUT (TEMA CYBER SPACE)
         ------------------------------------------------------------- */
         #main-menu {
             display: flex;
@@ -104,20 +105,21 @@
             text-align: center;
             margin-bottom: 50px;
             padding: 30px 60px;
-            background: var(--merah-glass);
+            background: var(--panel-glass);
             border-radius: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(0, 240, 255, 0.4);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            box-shadow: 0 15px 50px rgba(80, 0, 10, 0.8), 0 0 30px rgba(255, 23, 68, 0.4);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 240, 255, 0.25);
             position: relative;
         }
 
         .menu-title::before,
         .menu-title::after {
-            content: '*';
+            content: '✦';
             position: absolute;
-            font-size: 24px;
+            font-size: 20px;
+            color: var(--cyan-glow);
         }
 
         .menu-title::before { top: 10px; left: 15px; }
@@ -126,7 +128,7 @@
         .menu-title h1 {
             font-family: 'Cinzel', serif;
             font-size: 3.8rem;
-            background: var(--merah-gradient);
+            background: var(--neon-gradient);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -134,7 +136,7 @@
             text-transform: uppercase;
             letter-spacing: 4px;
             font-weight: 900;
-            filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 15px rgba(255, 23, 68, 0.6));
+            filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 15px rgba(0, 240, 255, 0.6));
             animation: silverShine 4s linear infinite !important;
         }
 
@@ -144,9 +146,9 @@
         }
 
         .menu-title p {
-            color: #ffffff;
+            color: #e2e8ff;
             font-weight: 700;
-            text-shadow: 2px 2px 10px #000000;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
             margin-top: 10px;
             letter-spacing: 2px;
             font-size: 1.1rem;
@@ -169,7 +171,7 @@
             width: 160px;
             height: 160px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 23, 68, 0.4) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 75%);
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.3) 0%, rgba(189, 0, 255, 0.2) 50%, transparent 75%);
             animation: logoPulse 2.5s ease-in-out infinite;
             z-index: 0;
         }
@@ -183,7 +185,7 @@
             width: 145px;
             height: 145px;
             border-radius: 50%;
-            border: 2px dashed rgba(255, 255, 255, 0.8);
+            border: 2px dashed rgba(0, 240, 255, 0.8);
             animation: logoSpin 6s linear infinite;
             z-index: 0;
         }
@@ -197,7 +199,7 @@
             width: 110px;
             height: 110px;
             object-fit: contain;
-            filter: drop-shadow(0 0 18px rgba(255, 23, 68, 0.8));
+            filter: drop-shadow(0 0 18px rgba(0, 240, 255, 0.8));
             animation: logoFloat 3s ease-in-out infinite;
         }
 
@@ -225,16 +227,16 @@
         }
 
         .menu-card {
-            background: var(--merah-glass);
+            background: var(--panel-glass);
             padding: 40px 15px;
             border-radius: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.5s cubic-bezier(.175, .885, .32, 1.275);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(0, 240, 255, 0.3);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 15px 40px rgba(50, 0, 10, 0.7);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
             position: relative;
             overflow: hidden;
             display: flex;
@@ -256,9 +258,9 @@
             position: absolute;
             top: 5px;
             left: 8px;
-            color: #ffffff;
+            color: var(--cyan-glow);
             font-size: 16px;
-            opacity: 0.6;
+            opacity: 0.8;
         }
 
         .menu-card::after {
@@ -267,21 +269,15 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: repeating-linear-gradient(
-                45deg,
-                #FF1744,
-                #FF1744 10px,
-                #FFFFFF 10px,
-                #FFFFFF 20px
-            );
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan-glow), var(--purple-glow));
         }
 
         .menu-card:hover {
             transform: translateY(-15px) scale(1.02);
-            background: var(--merah-hover);
-            border-color: #ffffff;
-            box-shadow: 0 0 45px rgba(255, 23, 68, 0.6);
+            background: var(--panel-hover);
+            border-color: var(--cyan-glow);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.5);
         }
 
         .menu-card h3 {
@@ -290,16 +286,16 @@
             font-size: 18px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            background: var(--merah-gradient);
+            background: var(--neon-gradient);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: silverShine 3s linear infinite !important;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
         }
 
         .menu-card p {
-            color: #ffffff;
+            color: #d1d9ff;
             font-weight: 600;
             text-shadow: 1px 1px 5px #000000;
             opacity: 0.95;
@@ -314,13 +310,13 @@
             display: none;
             max-width: 1200px;
             margin: 30px auto;
-            background: var(--merah-panel);
+            background: var(--panel-bg);
             padding: 45px;
             border-radius: 20px;
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 25px 70px rgba(40, 0, 5, 0.95);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
             animation: fadeIn 0.5s ease-out;
             position: relative;
             z-index: 1;
@@ -332,9 +328,9 @@
         }
 
         .btn-back {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(0, 240, 255, 0.1);
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 240, 255, 0.5);
             padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
@@ -346,14 +342,14 @@
         }
 
         .btn-back:hover {
-            background: #ffffff;
-            color: #B71C1C;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+            background: var(--cyan-glow);
+            color: #050714;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
         }
 
         header h2 {
             font-family: 'Cinzel', serif;
-            background: var(--merah-gradient);
+            background: var(--neon-gradient);
             background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -369,9 +365,9 @@
             height: 180px;
             padding: 20px;
             border-radius: 12px;
-            background: rgba(40, 2, 6, 0.85);
+            background: rgba(5, 8, 22, 0.85);
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(0, 240, 255, 0.3);
             font-family: 'Poppins', sans-serif;
             font-size: 14px;
             box-sizing: border-box;
@@ -380,8 +376,8 @@
         }
 
         textarea:focus {
-            border-color: #ff4d4d;
-            box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
+            border-color: var(--cyan-glow);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
         }
 
         .action-bar {
@@ -392,8 +388,8 @@
         }
 
         .btn-copy {
-            background: linear-gradient(135deg, #FF1744 0%, #FFFFFF 100%);
-            color: #B71C1C;
+            background: linear-gradient(135deg, #00f0ff 0%, #bd00ff 100%);
+            color: #ffffff;
             border: none;
             padding: 20px 45px;
             border-radius: 10px;
@@ -401,19 +397,19 @@
             font-weight: 900;
             font-size: 17px;
             text-transform: uppercase;
-            box-shadow: 0 10px 30px rgba(255, 23, 68, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
             transition: 0.3s;
         }
 
         .btn-copy:hover {
             transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.6);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.6);
         }
 
         .btn-clear {
-            background: rgba(255, 77, 77, 0.25);
-            color: #ff6b6b;
-            border: 1px solid rgba(255, 77, 77, 0.5);
+            background: rgba(255, 51, 102, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.5);
             padding: 20px 30px;
             border-radius: 10px;
             cursor: pointer;
@@ -424,7 +420,7 @@
         }
 
         .btn-clear:hover {
-            background: rgba(255, 77, 77, 0.5);
+            background: rgba(255, 51, 102, 0.5);
             color: #ffffff;
             transform: scale(1.05);
         }
@@ -432,8 +428,8 @@
         .table-container {
             overflow-x: auto;
             border-radius: 12px;
-            background: rgba(20, 1, 3, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(4, 6, 16, 0.8);
+            border: 1px solid rgba(0, 240, 255, 0.2);
         }
 
         table {
@@ -443,12 +439,12 @@
         }
 
         th {
-            background: #B71C1C;
-            color: #ffffff;
+            background: rgba(20, 28, 65, 0.9);
+            color: var(--cyan-glow);
             padding: 22px 20px;
             text-align: left;
             text-transform: uppercase;
-            border-bottom: 3px solid #ffffff;
+            border-bottom: 2px solid var(--cyan-glow);
             font-size: 13px;
             letter-spacing: 1px;
         }
@@ -461,14 +457,14 @@
         }
 
         tr:nth-child(even) {
-            background: rgba(183, 28, 28, 0.15);
+            background: rgba(0, 240, 255, 0.04);
         }
 
         .bank-badge {
-            color: #ff4d4d;
+            color: var(--cyan-glow);
             font-weight: 800;
             text-transform: uppercase;
-            text-shadow: 0 0 5px rgba(255, 77, 77, 0.4);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
         }
 
         .nominal-in {
@@ -484,9 +480,9 @@
         #toast {
             visibility: hidden;
             min-width: 260px;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FFEBEE 100%);
-            color: #B71C1C;
-            border: 2px solid #ff4d4d;
+            background: linear-gradient(135deg, #050714 0%, #101835 100%);
+            color: var(--cyan-glow);
+            border: 2px solid var(--cyan-glow);
             text-align: center;
             border-radius: 10px;
             padding: 14px 20px;
@@ -497,7 +493,7 @@
             transform: translateX(-50%);
             font-weight: 800;
             font-size: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255, 77, 77, 0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 240, 255, 0.6);
             opacity: 0;
             transition: opacity 0.3s, bottom 0.3s;
         }
@@ -514,11 +510,11 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(40, 2, 6, 0.8);
+            background: rgba(5, 8, 22, 0.8);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #B71C1C, #ffffff);
+            background: linear-gradient(180deg, var(--cyan-glow), var(--purple-glow));
             border-radius: 10px;
         }
     </style>
@@ -526,7 +522,7 @@
 
 <body>
 
-    <!-- Container Glitter Jatuh Merah Putih -->
+    <!-- Container Glitter Jatuh Space Stardust -->
     <div id="glitter-container"></div>
 
     <!-- Toast Notifikasi Melayang -->
@@ -535,7 +531,7 @@
     <div id="main-menu">
         <div class="menu-title">
             <div class="menu-logo-wrap">
-                <img src="https://png.pngtree.com/png-clipart/20220721/ourmid/pngtree-bendera-indonesia-merah-putih-abstract-png-image_6032654.png" alt="Logo">
+                <img src="https://png.pngtree.com/png-clipart/20250219/original/pngtree-radiant-neon-glow-lotus-blossom-png-image_20473953.png" alt="Logo">
             </div>
             <h1>SHORTCUT PANEL</h1>
             <p>Pilih Tools Shortcut Bosku!</p>
@@ -685,7 +681,7 @@
     </div>
 
     <script>
-        // --- LOGIKA GENERATE EFEK GLITTER MERAH PUTIH ---
+        // --- LOGIKA GENERATE EFEK GLITTER CYBER SPACE ---
         function createGlitter() {
             const container = document.getElementById('glitter-container');
             const particleCount = 50;
@@ -694,7 +690,7 @@
                 const particle = document.createElement('div');
                 particle.classList.add('glitter-particle');
                 
-                // Pembagian warna 50% Merah dan 50% Putih
+                // Pembagian warna 50% Cyan dan 50% Purple
                 if (Math.random() > 0.5) {
                     particle.classList.add('white');
                 } else {
