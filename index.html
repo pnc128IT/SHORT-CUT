@@ -607,18 +607,18 @@
 
             // Index 0 = Januari ... 11 = Desember
             var MONTHLY_THEMES = [
-                { name: 'Cyber Ice',       primary: '#00f0ff', secondary: '#6a5cff', success: '#00ffaa', danger: '#ff3366' },
-                { name: 'Neon Rose',       primary: '#ff4fd8', secondary: '#7c3aed', success: '#2dffb0', danger: '#ff3b3b' },
-                { name: 'Emerald Circuit', primary: '#00ffb3', secondary: '#00c2ff', success: '#7cff00', danger: '#ff5566' },
-                { name: 'Solar Amber',     primary: '#ffb703', secondary: '#ff5e62', success: '#7cfc00', danger: '#ff2d55' },
-                { name: 'Aurora Mint',     primary: '#7cffcb', secondary: '#7c83ff', success: '#00e6a8', danger: '#ff4d6d' },
-                { name: 'Toxic Lime',      primary: '#b6ff00', secondary: '#00ffd5', success: '#baff29', danger: '#ff3860' },
-                { name: 'Royal Gold',      primary: '#ffd700', secondary: '#bd00ff', success: '#7cff6b', danger: '#ff2e63' },
-                { name: 'Nebula Magenta',  primary: '#ff00c8', secondary: '#6200ff', success: '#00ffb2', danger: '#ff1744' },
-                { name: 'Ocean Teal',      primary: '#00e5ff', secondary: '#0066ff', success: '#00ffa6', danger: '#ff3d5a' },
-                { name: 'Halloween Ember', primary: '#ff7a00', secondary: '#7c00ff', success: '#7bff00', danger: '#ff0033' },
-                { name: 'Deep Violet',     primary: '#b967ff', secondary: '#00d4ff', success: '#6bffb8', danger: '#ff3366' },
-                { name: 'Frost Crimson',   primary: '#ff2e2e', secondary: '#00ff6a', success: '#ffd700', danger: '#ff2e2e' }
+                { name: 'Cyber Ice',       primary: '#00f0ff', secondary: '#6a5cff', success: '#00ffaa', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/anime-girl-purple-eyes-cyberpunk-5k-w4-1366x768.jpg' },
+                { name: 'Neon Rose',       primary: '#ff4fd8', secondary: '#7c3aed', success: '#2dffb0', danger: '#ff3b3b', bg: 'https://images.hdqwalls.com/download/cosmos-nebula-space-pink-galaxy-4k-kf-1366x768.jpg' },
+                { name: 'Emerald Circuit', primary: '#00ffb3', secondary: '#00c2ff', success: '#7cff00', danger: '#ff5566', bg: 'https://images.hdqwalls.com/download/mountain-milky-way-galaxy-nv-1366x768.jpg' },
+                { name: 'Solar Amber',     primary: '#ffb703', secondary: '#ff5e62', success: '#7cfc00', danger: '#ff2d55', bg: 'https://images.hdqwalls.com/download/galaxy-pattern-sunset-texture-ne-1366x768.jpg' },
+                { name: 'Aurora Mint',     primary: '#7cffcb', secondary: '#7c83ff', success: '#00e6a8', danger: '#ff4d6d', bg: 'https://images.hdqwalls.com/download/the-andromeda-galaxy-j6-1366x768.jpg' },
+                { name: 'Toxic Lime',      primary: '#b6ff00', secondary: '#00ffd5', success: '#baff29', danger: '#ff3860', bg: 'https://images.hdqwalls.com/download/neon-space-nebula-4k-gs-1366x768.jpg' },
+                { name: 'Royal Gold',      primary: '#ffd700', secondary: '#bd00ff', success: '#7cff6b', danger: '#ff2e63', bg: 'https://images.hdqwalls.com/download/golden-stardust-nebula-space-exploration-pw-1366x768.jpg' },
+                { name: 'Nebula Magenta',  primary: '#ff00c8', secondary: '#6200ff', success: '#00ffb2', danger: '#ff1744', bg: 'https://images.hdqwalls.com/download/blue-ringed-planet-purple-pink-nebula-mp-1366x768.jpg' },
+                { name: 'Ocean Teal',      primary: '#00e5ff', secondary: '#0066ff', success: '#00ffa6', danger: '#ff3d5a', bg: 'https://images.hdqwalls.com/download/mountain-milky-way-galaxy-nv-1366x768.jpg' },
+                { name: 'Halloween Ember', primary: '#ff7a00', secondary: '#7c00ff', success: '#7bff00', danger: '#ff0033', bg: 'https://images.hdqwalls.com/download/galaxy-pattern-sunset-texture-ne-1366x768.jpg' },
+                { name: 'Deep Violet',     primary: '#b967ff', secondary: '#00d4ff', success: '#6bffb8', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/deep-space-purple-space-art-x8-1366x768.jpg' },
+                { name: 'Frost Crimson',   primary: '#ff2e2e', secondary: '#00ff6a', success: '#ffd700', danger: '#ff2e2e', bg: 'https://images.hdqwalls.com/download/red-galaxy-4k-e2-1366x768.jpg' }
             ];
 
             var theme = MONTHLY_THEMES[new Date().getMonth()];
@@ -630,6 +630,7 @@
             root.setProperty('--success', theme.success);
             root.setProperty('--danger', theme.danger);
             root.setProperty('--danger-rgb', hexToRgb(theme.danger));
+            root.setProperty('--bg-photo', "url('" + theme.bg + "')");
         })();
     </script>
 </head>
