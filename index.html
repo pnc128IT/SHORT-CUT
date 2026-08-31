@@ -1,1218 +1,770 @@
 <!DOCTYPE html>
-
 <html lang="id">
 
-
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>SHORTCUT PANEL - SPACE CYBER EDITION</title>
-
     <link
-
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap"
-
         rel="stylesheet">
-
     <style>
-
         :root {
-
             /* Warna Akses Tema Space & Cyber Neon */
-
-            /* NOTE: nilai di bawah ini adalah default. Nilai aktual akan di-override
-
-               otomatis tiap bulan oleh script tema di akhir <body> — tidak mengubah
-
-               logika/fungsi apapun, hanya warna tampilan. */
-
             --cyan-glow: #00f0ff;
-
             --cyan-glow-rgb: 0, 240, 255;
-
             --purple-glow: #bd00ff;
-
             --purple-glow-rgb: 189, 0, 255;
-
             --neon-gradient: linear-gradient(135deg, var(--cyan-glow) 0%, #ffffff 50%, var(--purple-glow) 100%);
-
             --panel-glass: rgba(12, 16, 38, 0.75);
-
             --panel-bg: rgba(8, 11, 28, 0.90);
-
             --panel-hover: rgba(25, 35, 75, 0.75);
-
             --border-glow: rgba(var(--cyan-glow-rgb), 0.4);
-
             --success: #00ffaa;
-
             --danger: #ff3366;
-
             --danger-rgb: 255, 51, 102;
-
             --bg-photo: url('https://images.hdqwalls.com/download/anime-girl-purple-eyes-cyberpunk-5k-w4-1366x768.jpg');
-
+            --current-cursor: auto;
         }
-
-
 
         * {
-
             box-sizing: border-box;
-
         }
-
-
-
-        body {
-
-            font-family: 'Poppins', sans-serif;
-
-            background-color: #050714;
-
-            background-image:
-
-                radial-gradient(circle at top right, rgba(var(--purple-glow-rgb), 0.25), transparent 45%),
-
-                linear-gradient(rgba(5, 7, 20, 0.1), rgba(5, 7, 20, 0.2)),
-
-                var(--bg-photo) !important;
-
-            background-size: cover !important;
-
-            background-position: center !important;
-
-            background-attachment: fixed !important;
-
-            margin: 0;
-
-            padding: 20px;
-
-            color: #ffffff;
-
-            min-height: 100vh;
-
-            overflow-x: hidden;
-
-            position: relative;
-
-        }
-
-
 
         /* -------------------------------------------------------------
-
-           CONTAINER EFEK STARDUST / GLITTER SPACE
-
+           DYNAMIC CURSOR ATOMIZATION FOR WHOLE PAGE
         ------------------------------------------------------------- */
-
-        #glitter-container {
-
-            position: fixed;
-
-            top: 0;
-
-            left: 0;
-
-            width: 100%;
-
-            height: 100%;
-
-            pointer-events: none;
-
-            z-index: 9999;
-
-            overflow: hidden;
-
+        *, html, body, button, input, textarea, a, div, span, table, tr, td, th {
+            cursor: var(--current-cursor) !important;
         }
 
+        body, html {
+            font-family: 'Poppins', sans-serif;
+            background-color: #050714;
+            background-image:
+                radial-gradient(circle at top right, rgba(var(--purple-glow-rgb), 0.25), transparent 45%),
+                linear-gradient(rgba(5, 7, 20, 0.1), rgba(5, 7, 20, 0.2)),
+                var(--bg-photo) !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+            margin: 0;
+            padding: 20px;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
+        /* -------------------------------------------------------------
+           EFEK CAHAYA (GLOW) UTAMA PADA KURSOR
+        ------------------------------------------------------------- */
+        #cursor-glow-aura {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            margin-left: -17px;
+            margin-top: -17px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--cyan-glow-rgb), 0.8) 0%, rgba(var(--cyan-glow-rgb), 0.3) 45%, transparent 75%);
+            filter: blur(4px);
+            pointer-events: none;
+            z-index: 99998;
+            transform: translate3d(0, 0, 0);
+            transition: transform 0.04s ease-out;
+            mix-blend-mode: screen;
+        }
+
+        /* -------------------------------------------------------------
+           EFEK GLITTER / SPARKLE JEJAK GERAKAN KURSOR
+        ------------------------------------------------------------- */
+        .cursor-sparkle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            animation: fadeSparkle 0.7s forwards cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        @keyframes fadeSparkle {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.4) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.1) translateY(25px) rotate(180deg);
+            }
+        }
+
+        /* -------------------------------------------------------------
+           CONTAINER EFEK STARDUST / GLITTER SPACE (BACKGROUND)
+        ------------------------------------------------------------- */
+        #glitter-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
 
         .glitter-particle {
-
             position: absolute;
-
             top: -20px;
-
             border-radius: 50%;
-
             pointer-events: none;
-
             animation: fall linear infinite, twinkle 1.5s ease-in-out infinite alternate;
-
         }
-
-
-
-        /* Particle Cyan Glow */
 
         .glitter-particle.white {
-
             background: radial-gradient(circle, var(--cyan-glow) 0%, rgba(var(--cyan-glow-rgb), 0.8) 50%, transparent 100%);
-
             box-shadow: 0 0 10px var(--cyan-glow), 0 0 18px rgba(var(--cyan-glow-rgb), 0.8);
-
         }
-
-
-
-        /* Particle Purple Glow */
 
         .glitter-particle.red {
-
             background: radial-gradient(circle, var(--purple-glow) 0%, rgba(var(--purple-glow-rgb), 0.8) 50%, transparent 100%);
-
             box-shadow: 0 0 10px var(--purple-glow), 0 0 18px rgba(var(--purple-glow-rgb), 0.8);
-
         }
-
-
 
         @keyframes fall {
-
             0% {
-
                 transform: translateY(-20px) rotate(0deg);
-
                 opacity: 0;
-
             }
-
-
-
-            10% {
-
-                opacity: 1;
-
-            }
-
-
-
-            90% {
-
-                opacity: 0.8;
-
-            }
-
-
-
+            10% { opacity: 1; }
+            90% { opacity: 0.8; }
             100% {
-
                 transform: translateY(105vh) rotate(360deg);
-
                 opacity: 0;
-
             }
-
         }
-
-
 
         @keyframes twinkle {
-
-            0% {
-
-                filter: brightness(0.8) scale(0.8);
-
-            }
-
-
-
-            100% {
-
-                filter: brightness(1.6) scale(1.3);
-
-            }
-
+            0% { filter: brightness(0.8) scale(0.8); }
+            100% { filter: brightness(1.6) scale(1.3); }
         }
-
-
 
         /* -------------------------------------------------------------
-
            MAIN MENU LAYOUT (TEMA CYBER SPACE)
-
         ------------------------------------------------------------- */
-
         #main-menu {
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             justify-content: center;
-
             min-height: 90vh;
-
             position: relative;
-
             z-index: 1;
-
         }
-
-
 
         .menu-title {
-
             text-align: center;
-
             margin-bottom: 50px;
-
             padding: 30px 60px;
-
             background: var(--panel-glass);
-
             border-radius: 20px;
-
             border: 1px solid rgba(var(--cyan-glow-rgb), 0.4);
-
             backdrop-filter: blur(25px);
-
             -webkit-backdrop-filter: blur(25px);
-
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(var(--cyan-glow-rgb), 0.25);
-
             position: relative;
-
         }
-
-
 
         .menu-title::before,
-
         .menu-title::after {
-
             content: '✦';
-
             position: absolute;
-
             font-size: 20px;
-
             color: var(--cyan-glow);
-
         }
 
-
-
-        .menu-title::before {
-
-            top: 10px;
-
-            left: 15px;
-
-        }
-
-
-
-        .menu-title::after {
-
-            bottom: 10px;
-
-            right: 15px;
-
-        }
-
-
+        .menu-title::before { top: 10px; left: 15px; }
+        .menu-title::after { bottom: 10px; right: 15px; }
 
         .menu-title h1 {
-
             font-family: 'Cinzel', serif;
-
             font-size: 3.8rem;
-
             background: var(--neon-gradient);
-
             background-size: 200% auto;
-
             -webkit-background-clip: text;
-
             -webkit-text-fill-color: transparent;
-
             margin: 0;
-
             text-transform: uppercase;
-
             letter-spacing: 4px;
-
             font-weight: 900;
-
             filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 15px rgba(var(--cyan-glow-rgb), 0.6));
-
             animation: silverShine 4s linear infinite !important;
-
         }
-
-
 
         @keyframes silverShine {
-
-            0% {
-
-                background-position: -200% center;
-
-            }
-
-
-
-            100% {
-
-                background-position: 200% center;
-
-            }
-
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
         }
-
-
 
         .menu-title p {
-
             color: #e2e8ff;
-
             font-weight: 700;
-
             text-shadow: 0 0 10px rgba(var(--cyan-glow-rgb), 0.5);
-
             margin-top: 10px;
-
             letter-spacing: 2px;
-
             font-size: 1.1rem;
-
         }
-
-
 
         .menu-logo-wrap {
-
             position: relative;
-
             display: inline-block;
-
             margin-bottom: 15px;
-
             width: 160px;
-
             height: 160px;
-
         }
-
-
 
         .menu-logo-wrap::before {
-
             content: '';
-
             position: absolute;
-
             top: 50%;
-
             left: 50%;
-
             transform: translate(-50%, -50%);
-
             width: 160px;
-
             height: 160px;
-
             border-radius: 50%;
-
             background: radial-gradient(circle, rgba(var(--cyan-glow-rgb), 0.3) 0%, rgba(var(--purple-glow-rgb), 0.2) 50%, transparent 75%);
-
             animation: logoPulse 2.5s ease-in-out infinite;
-
             z-index: 0;
-
         }
-
-
 
         .menu-logo-wrap::after {
-
             content: '';
-
             position: absolute;
-
             top: 50%;
-
             left: 50%;
-
             transform: translate(-50%, -50%) rotate(0deg);
-
             width: 145px;
-
             height: 145px;
-
             border-radius: 50%;
-
             border: 2px dashed rgba(var(--cyan-glow-rgb), 0.8);
-
             animation: logoSpin 6s linear infinite;
-
             z-index: 0;
-
         }
-
-
 
         .menu-logo-wrap img {
-
             position: absolute;
-
             top: 50%;
-
             left: 50%;
-
             transform: translate(-50%, -50%);
-
             z-index: 1;
-
             width: 110px;
-
             height: 110px;
-
             object-fit: contain;
-
             filter: drop-shadow(0 0 18px rgba(var(--cyan-glow-rgb), 0.8));
-
             animation: logoFloat 3s ease-in-out infinite;
-
         }
-
-
 
         @keyframes logoPulse {
-
-
-
-            0%,
-
-            100% {
-
-                opacity: 0.5;
-
-                transform: translate(-50%, -50%) scale(1);
-
-            }
-
-
-
-            50% {
-
-                opacity: 1;
-
-                transform: translate(-50%, -50%) scale(1.18);
-
-            }
-
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
         }
-
-
 
         @keyframes logoSpin {
-
-            from {
-
-                transform: translate(-50%, -50%) rotate(0deg);
-
-            }
-
-
-
-            to {
-
-                transform: translate(-50%, -50%) rotate(360deg);
-
-            }
-
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
-
-
 
         @keyframes logoFloat {
-
-
-
-            0%,
-
-            100% {
-
-                transform: translate(-50%, -50%) translateY(0px);
-
-            }
-
-
-
-            50% {
-
-                transform: translate(-50%, -50%) translateY(-8px);
-
-            }
-
+            0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+            50% { transform: translate(-50%, -50%) translateY(-8px); }
         }
-
-
 
         .grid-menu {
-
             display: grid;
-
             grid-template-columns: repeat(4, 1fr);
-
             gap: 20px;
-
             width: 95%;
-
             max-width: 1400px;
-
         }
-
-
 
         .menu-card {
-
             background: var(--panel-glass);
-
             padding: 40px 15px;
-
             border-radius: 15px;
-
             text-align: center;
-
-            cursor: pointer;
-
             transition: all 0.5s cubic-bezier(.175, .885, .32, 1.275);
-
             border: 1px solid rgba(var(--cyan-glow-rgb), 0.3);
-
             backdrop-filter: blur(20px);
-
             -webkit-backdrop-filter: blur(20px);
-
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
-
             position: relative;
-
             overflow: hidden;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             justify-content: center;
-
         }
 
-
-
-        @media (max-width: 1100px) {
-
-            .grid-menu {
-
-                grid-template-columns: repeat(2, 1fr);
-
-            }
-
-        }
-
-
-
-        @media (max-width: 650px) {
-
-            .grid-menu {
-
-                grid-template-columns: 1fr;
-
-            }
-
-        }
-
-
+        @media (max-width: 1100px) { .grid-menu { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 650px) { .grid-menu { grid-template-columns: 1fr; } }
 
         .menu-card::before {
-
             content: '✦';
-
             position: absolute;
-
             top: 5px;
-
             left: 8px;
-
             color: var(--cyan-glow);
-
             font-size: 16px;
-
             opacity: 0.8;
-
         }
-
-
 
         .menu-card::after {
-
             content: '';
-
             position: absolute;
-
             top: 0;
-
             left: 0;
-
             width: 100%;
-
             height: 3px;
-
             background: linear-gradient(90deg, var(--cyan-glow), var(--purple-glow));
-
         }
-
-
 
         .menu-card:hover {
-
             transform: translateY(-15px) scale(1.02);
-
             background: var(--panel-hover);
-
             border-color: var(--cyan-glow);
-
             box-shadow: 0 0 35px rgba(var(--cyan-glow-rgb), 0.5);
-
         }
-
-
 
         .menu-card h3 {
-
             margin: 15px 0 10px;
-
             font-weight: 800;
-
             font-size: 18px;
-
             text-transform: uppercase;
-
             letter-spacing: 1px;
-
             background: var(--neon-gradient);
-
             background-size: 200% auto;
-
             -webkit-background-clip: text;
-
             -webkit-text-fill-color: transparent;
-
             animation: silverShine 3s linear infinite !important;
-
             filter: drop-shadow(0 0 8px rgba(var(--cyan-glow-rgb), 0.5));
-
         }
-
-
 
         .menu-card p {
-
             color: #d1d9ff;
-
             font-weight: 600;
-
             text-shadow: 1px 1px 5px #000000;
-
             opacity: 0.95;
-
             font-size: 13px;
-
             margin: 0;
-
         }
-
-
 
         /* -------------------------------------------------------------
-
            TOOL PANEL CONTAINER
-
         ------------------------------------------------------------- */
-
         .container {
-
             display: none;
-
             max-width: 1200px;
-
             margin: 30px auto;
-
             background: var(--panel-bg);
-
             padding: 45px;
-
             border-radius: 20px;
-
             backdrop-filter: blur(25px);
-
             -webkit-backdrop-filter: blur(25px);
-
             border: 1px solid rgba(var(--cyan-glow-rgb), 0.4);
-
             box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
-
             animation: fadeIn 0.5s ease-out;
-
             position: relative;
-
             z-index: 1;
-
         }
-
-
 
         @keyframes fadeIn {
-
-            from {
-
-                opacity: 0;
-
-                transform: translateY(20px);
-
-            }
-
-
-
-            to {
-
-                opacity: 1;
-
-                transform: translateY(0);
-
-            }
-
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-
 
         .btn-back {
-
             background: rgba(var(--cyan-glow-rgb), 0.1);
-
             color: #ffffff;
-
             border: 1px solid rgba(var(--cyan-glow-rgb), 0.5);
-
             padding: 12px 25px;
-
             border-radius: 8px;
-
-            cursor: pointer;
-
             margin-bottom: 25px;
-
             font-weight: 700;
-
             transition: 0.3s;
-
             text-transform: uppercase;
-
             font-size: 13px;
-
         }
-
-
 
         .btn-back:hover {
-
             background: var(--cyan-glow);
-
             color: #050714;
-
             box-shadow: 0 0 20px rgba(var(--cyan-glow-rgb), 0.8);
-
         }
-
-
 
         header h2 {
-
             font-family: 'Cinzel', serif;
-
             background: var(--neon-gradient);
-
             background-size: 200% auto;
-
             -webkit-background-clip: text;
-
             -webkit-text-fill-color: transparent;
-
             text-align: center;
-
             font-size: 32px;
-
             margin-bottom: 40px;
-
             animation: silverShine 4s linear infinite !important;
-
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.9));
-
         }
-
-
 
         textarea {
-
             width: 100%;
-
             height: 180px;
-
             padding: 20px;
-
             border-radius: 12px;
-
             background: rgba(5, 8, 22, 0.85);
-
             color: #ffffff;
-
             border: 1px solid rgba(var(--cyan-glow-rgb), 0.3);
-
             font-family: 'Poppins', sans-serif;
-
             font-size: 14px;
-
             box-sizing: border-box;
-
             outline: none;
-
             resize: vertical;
-
         }
-
-
 
         textarea:focus {
-
             border-color: var(--cyan-glow);
-
             box-shadow: 0 0 15px rgba(var(--cyan-glow-rgb), 0.5);
-
         }
-
-
 
         .action-bar {
-
             display: flex;
-
             justify-content: center;
-
             gap: 15px;
-
             margin: 30px 0 50px;
-
         }
-
-
 
         .btn-copy {
-
             background: linear-gradient(135deg, var(--cyan-glow) 0%, var(--purple-glow) 100%);
-
             color: #ffffff;
-
             border: none;
-
             padding: 20px 45px;
-
             border-radius: 10px;
-
-            cursor: pointer;
-
             font-weight: 900;
-
             font-size: 17px;
-
             text-transform: uppercase;
-
             box-shadow: 0 10px 30px rgba(var(--cyan-glow-rgb), 0.3);
-
             transition: 0.3s;
-
         }
-
-
 
         .btn-copy:hover {
-
             transform: scale(1.05);
-
             box-shadow: 0 15px 40px rgba(var(--cyan-glow-rgb), 0.6);
-
         }
-
-
 
         .btn-clear {
-
             background: rgba(var(--danger-rgb), 0.2);
-
             color: var(--danger);
-
             border: 1px solid rgba(var(--danger-rgb), 0.5);
-
             padding: 20px 30px;
-
             border-radius: 10px;
-
-            cursor: pointer;
-
             font-weight: 800;
-
             font-size: 15px;
-
             text-transform: uppercase;
-
             transition: 0.3s;
-
         }
-
-
 
         .btn-clear:hover {
-
             background: rgba(var(--danger-rgb), 0.5);
-
             color: #ffffff;
-
             transform: scale(1.05);
-
         }
-
-
 
         .table-container {
-
             overflow-x: auto;
-
             border-radius: 12px;
-
             background: rgba(4, 6, 16, 0.8);
-
             border: 1px solid rgba(var(--cyan-glow-rgb), 0.2);
-
         }
-
-
 
         table {
-
             width: 100%;
-
             border-collapse: collapse;
-
             min-width: 800px;
-
         }
-
-
 
         th {
-
             background: rgba(20, 28, 65, 0.9);
-
             color: var(--cyan-glow);
-
             padding: 22px 20px;
-
             text-align: left;
-
             text-transform: uppercase;
-
             border-bottom: 2px solid var(--cyan-glow);
-
             font-size: 13px;
-
             letter-spacing: 1px;
-
         }
-
-
 
         td {
-
             padding: 18px 20px;
-
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-
             color: #ffffff !important;
-
             font-size: 14px;
-
         }
 
-
-
-        tr:nth-child(even) {
-
-            background: rgba(var(--cyan-glow-rgb), 0.04);
-
-        }
-
-
+        tr:nth-child(even) { background: rgba(var(--cyan-glow-rgb), 0.04); }
 
         .bank-badge {
-
             color: var(--cyan-glow);
-
             font-weight: 800;
-
             text-transform: uppercase;
-
             text-shadow: 0 0 8px rgba(var(--cyan-glow-rgb), 0.6);
-
         }
 
-
-
-        .nominal-in {
-
-            color: var(--success) !important;
-
-            font-weight: 800;
-
-        }
-
-
-
-        .nominal-out {
-
-            color: var(--danger) !important;
-
-            font-weight: 800;
-
-        }
-
-
+        .nominal-in { color: var(--success) !important; font-weight: 800; }
+        .nominal-out { color: var(--danger) !important; font-weight: 800; }
 
         #toast {
-
             visibility: hidden;
-
             min-width: 260px;
-
             background: linear-gradient(135deg, #050714 0%, #101835 100%);
-
             color: var(--cyan-glow);
-
             border: 2px solid var(--cyan-glow);
-
             text-align: center;
-
             border-radius: 10px;
-
             padding: 14px 20px;
-
             position: fixed;
-
             z-index: 10000;
-
             left: 50%;
-
             bottom: 30px;
-
             transform: translateX(-50%);
-
             font-weight: 800;
-
             font-size: 15px;
-
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(var(--cyan-glow-rgb), 0.6);
-
             opacity: 0;
-
             transition: opacity 0.3s, bottom 0.3s;
-
         }
-
-
 
         #toast.show {
-
             visibility: visible;
-
             opacity: 1;
-
             bottom: 50px;
-
         }
 
-
-
-        ::-webkit-scrollbar {
-
-            width: 10px;
-
-            height: 10px;
-
-        }
-
-
-
-        ::-webkit-scrollbar-track {
-
-            background: rgba(5, 8, 22, 0.8);
-
-        }
-
-
-
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(5, 8, 22, 0.8); }
         ::-webkit-scrollbar-thumb {
-
             background: linear-gradient(180deg, var(--cyan-glow), var(--purple-glow));
-
             border-radius: 10px;
-
         }
-
     </style>
+</head>
 
+<body>
 
+    <!-- ELEMEN PENDARAN CAHAYA UTAMA PADA KURSOR -->
+    <div id="cursor-glow-aura"></div>
+
+    <!-- Container Glitter Jatuh Space Stardust -->
+    <div id="glitter-container"></div>
+
+    <!-- Toast Notifikasi Melayang -->
+    <div id="toast">✨ DATA BERHASIL DISALIN!</div>
+
+    <div id="main-menu">
+        <div class="menu-title">
+            <div class="menu-logo-wrap">
+                <img src="https://i.postimg.cc/sg7M84rZ/Gemini-Generated-Image-bf4r9dbf4r9dbf4r-removebg-preview.png" alt="Logo">
+            </div>
+            <h1>SHORTCUT PANEL</h1>
+            <p>Pilih Tools Shortcut Bosku!</p>
+        </div>
+        <div class="grid-menu">
+
+            <div class="menu-card" onclick="openTool('wd-container')">
+                <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp"
+                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto;filter:grayscale(1) brightness(1.5)">
+                <h3>SHORTCUT WD IDN</h3>
+                <p>Proses data Withdraw cepat & akurat</p>
+            </div>
+
+            <div class="menu-card" onclick="openTool('wdpng-container')">
+                <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp"
+                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto;filter:sepia(-1) saturate(7) hue-rotate(180deg) brightness(1.4)">
+                <h3>SHORTCUT WD PNG</h3>
+                <p>Proses data Withdraw PNG cepat & akurat</p>
+            </div>
+
+            <div class="menu-card" onclick="openTool('klikbca-container')">
+                <img src="https://pustaka.bca.co.id/Ocean/Product/DA162B01-4C4E-4E3F-A118-84C5514F0BD8/Logo/KlikBCA-Bisnis--Logo%20(1)-min.png"
+                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto">
+                <h3>SHORTCUT DP KLIK BCA</h3>
+                <p>Filter mutasi Klik BCA</p>
+            </div>
+
+            <div class="menu-card" onclick="openTool('mybca-container')">
+                <img src="https://play-lh.googleusercontent.com/ckrnc0pzN0oZgSaMQMnOYrICdBLwFTuI17MlTUp9ftyZPJ-m4K1pA3_Dz1B-1dCFVZbv"
+                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto">
+                <h3>SHORTCUT DP MY BCA</h3>
+                <p>Filter mutasi MyBCA</p>
+            </div>
+
+            <div class="menu-card" onclick="openExternalLink('https://pnc128it.github.io/REKAPAN-BANK-STATEMENT/')">
+                <img src="https://cdn-icons-png.flaticon.com/512/12142/12142876.png"
+                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto">
+                <h3>REKAPAN BANK STATEMENT</h3>
+                <p>Tools rekapan bank statement</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SHORTCUT WD IDN -->
+    <div id="wd-container" class="container">
+        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
+        <header>
+            <h2>SHORTCUT WD IDN</h2>
+        </header>
+        <textarea id="inputWD" placeholder="Tempel data WD di sini..."></textarea>
+        <div class="action-bar">
+            <button class="btn-copy" onclick="copyData('tableBodyWD')">✨ Salin Data WD!</button>
+            <button class="btn-clear" onclick="clearTool('inputWD', 'tableBodyWD')">🗑️ Bersihkan</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bank</th>
+                        <th>No. Rekening</th>
+                        <th>User ID</th>
+                        <th>Nama Pemilik</th>
+                        <th>Nominal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyWD"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SHORTCUT WD PNG -->
+    <div id="wdpng-container" class="container">
+        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
+        <header>
+            <h2>SHORTCUT WD PNG</h2>
+        </header>
+        <textarea id="inputWDPNG" placeholder="Tempel data WD PNG di sini..."></textarea>
+        <div class="action-bar">
+            <button class="btn-copy" onclick="copyData('tableBodyWDPNG')">✨ Salin Data WD PNG!</button>
+            <button class="btn-clear" onclick="clearTool('inputWDPNG', 'tableBodyWDPNG')">🗑️ Bersihkan</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bank</th>
+                        <th>No. Rekening</th>
+                        <th>User ID</th>
+                        <th>Nama Pemilik</th>
+                        <th>Nominal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyWDPNG"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SHORTCUT DP KLIK BCA -->
+    <div id="klikbca-container" class="container">
+        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
+        <header>
+            <h2>SHORTCUT DP KLIK BCA</h2>
+        </header>
+        <textarea id="inputKlikBCA" placeholder="Tempel mutasi Klik BCA di sini..."></textarea>
+        <div class="action-bar">
+            <button class="btn-copy" onclick="copyData('tableBodyKlikBCA')">✨ Salin Data KLIK BCA!</button>
+            <button class="btn-clear" onclick="clearTool('inputKlikBCA', 'tableBodyKlikBCA')">🗑️ Bersihkan</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Pengirim / Penerima</th>
+                        <th>Nominal Masuk (CR)</th>
+                        <th>Nominal Keluar (DB)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyKlikBCA"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SHORTCUT DP MY BCA -->
+    <div id="mybca-container" class="container">
+        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
+        <header>
+            <h2>SHORTCUT DP MY BCA</h2>
+        </header>
+        <textarea id="inputMyBCA" placeholder="Tempel mutasi MyBCA di sini..."></textarea>
+        <div class="action-bar">
+            <button class="btn-copy" onclick="copyData('tableBodyMyBCA')">✨ Salin Data MyBCA!</button>
+            <button class="btn-clear" onclick="clearTool('inputMyBCA', 'tableBodyMyBCA')">🗑️ Bersihkan</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Pengirim / Penerima</th>
+                        <th>Nominal Masuk (CR)</th>
+                        <th>Nominal Keluar (DB)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBodyMyBCA"></tbody>
+            </table>
+        </div>
+    </div>
 
     <script>
         // =================================================================
-        // TEMA OTOMATIS BULANAN (SPACE CYBER EDITION)
-        // Script ini HANYA mengganti variabel warna CSS (--cyan-glow, --purple-glow,
-        // --success, --danger) sesuai bulan berjalan. Tidak ada logika, hasil
-        // parsing, maupun fungsi lain yang diubah oleh script ini.
+        // GENERATOR KURSOR SVG ROUNDED ARROW TERHADAP WARNA TEMA BULANAN
         // =================================================================
-        (function () {
-            function hexToRgb(hex) {
-                hex = hex.replace('#', '');
-                if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
-                var num = parseInt(hex, 16);
-                return ((num >> 16) & 255) + ', ' + ((num >> 8) & 255) + ', ' + (num & 255);
-            }
-            // Index 0 = Januari ... 11 = Desember
-            var MONTHLY_THEMES = [
-                { name: 'Cyber Ice',       primary: '#00f0ff', secondary: '#6a5cff', success: '#00ffaa', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/anime-girl-purple-eyes-cyberpunk-5k-w4-1366x768.jpg' },
-                { name: 'Neon Rose',       primary: '#ff4fd8', secondary: '#7c3aed', success: '#2dffb0', danger: '#ff3b3b', bg: 'https://images.hdqwalls.com/download/anime-girl-city-night-neon-cyberpunk-4k-kw-1366x768.jpg' },
-                { name: 'Emerald Circuit', primary: '#00ffb3', secondary: '#00c2ff', success: '#7cff00', danger: '#ff5566', bg: 'https://images.hdqwalls.com/download/cyberpunk-blue-hair-warrior-looking-at-the-city-cx-1366x768.jpg' },
-                { name: 'Solar Amber',     primary: '#ffb703', secondary: '#ff5e62', success: '#7cfc00', danger: '#ff2d55', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
-                { name: 'Aurora Mint',     primary: '#7cffcb', secondary: '#7c83ff', success: '#00e6a8', danger: '#ff4d6d', bg: 'https://images.hdqwalls.com/download/blue-purple-neon-cyberpunk-city-rooftop-silhouette-sh-1366x768.jpg' },
-                { name: 'Toxic Lime',      primary: '#b6ff00', secondary: '#00ffd5', success: '#baff29', danger: '#ff3860', bg: 'https://images.hdqwalls.com/download/anime-cat-girl-cyberpunk-neon-city-night-ku-1366x768.jpg' },
-                { name: 'Royal Gold',      primary: '#ffd700', secondary: '#bd00ff', success: '#7cff6b', danger: '#ff2e63', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
-                { name: 'Nebula Magenta',  primary: '#ff00c8', secondary: '#6200ff', success: '#00ffb2', danger: '#ff1744', bg: 'https://images.hdqwalls.com/download/anime-girl-city-night-neon-cyberpunk-4k-kw-1366x768.jpg' },
-                { name: 'Ocean Teal',      primary: '#00e5ff', secondary: '#0066ff', success: '#00ffa6', danger: '#ff3d5a', bg: 'https://images.hdqwalls.com/download/cyberpunk-blue-hair-warrior-looking-at-the-city-cx-1366x768.jpg' },
-                { name: 'Halloween Ember', primary: '#ff7a00', secondary: '#7c00ff', success: '#7bff00', danger: '#ff0033', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
-                { name: 'Deep Violet',     primary: '#b967ff', secondary: '#00d4ff', success: '#6bffb8', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/cyberpunk-anime-girl-purple-hair-city-moon-ay-1366x768.jpg' },
-                { name: 'Frost Crimson',   primary: '#ff2e2e', secondary: '#00ff6a', success: '#ffd700', danger: '#ff2e2e', bg: 'https://images.hdqwalls.com/download/cyberpunk-anime-girl-red-neon-motorcycle-vz-1366x768.jpg' }
-            ];
+        function hexToRgb(hex) {
+            hex = hex.replace('#', '');
+            if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
+            var num = parseInt(hex, 16);
+            return ((num >> 16) & 255) + ', ' + ((num >> 8) & 255) + ', ' + (num & 255);
+        }
+
+        function getCustomCursor(shapeType, colorHex) {
+            var c = encodeURIComponent(colorHex);
+            
+            // SVG Panah Rounded Arrow persis gambar rujukan
+            var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='" + c + "' stroke='%23050714' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'><path d='M3.5 3.5l15.8 10.5-7.2 2.1-4.2 6.9z'/></svg>";
+            
+            // Hotspot akurat pada ujung panah kiri-atas
+            var hotX = 4;
+            var hotY = 4;
+
+            return "url(\"data:image/svg+xml;utf8," + svg + "\") " + hotX + " " + hotY + ", auto";
+        }
+
+        var MONTHLY_THEMES = [
+            { name: 'Cyber Ice',       shape: 'arrow',   primary: '#00f0ff', secondary: '#6a5cff', success: '#00ffaa', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/anime-girl-purple-eyes-cyberpunk-5k-w4-1366x768.jpg' },
+            { name: 'Neon Rose',       shape: 'rose',    primary: '#ff4fd8', secondary: '#7c3aed', success: '#2dffb0', danger: '#ff3b3b', bg: 'https://images.hdqwalls.com/download/anime-girl-city-night-neon-cyberpunk-4k-kw-1366x768.jpg' },
+            { name: 'Emerald Circuit', shape: 'circuit', primary: '#00ffb3', secondary: '#00c2ff', success: '#7cff00', danger: '#ff5566', bg: 'https://images.hdqwalls.com/download/cyberpunk-blue-hair-warrior-looking-at-the-city-cx-1366x768.jpg' },
+            { name: 'Solar Amber',     shape: 'sun',     primary: '#ffb703', secondary: '#ff5e62', success: '#7cfc00', danger: '#ff2d55', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
+            { name: 'Aurora Mint',     shape: 'mint',    primary: '#7cffcb', secondary: '#7c83ff', success: '#00e6a8', danger: '#ff4d6d', bg: 'https://images.hdqwalls.com/download/blue-purple-neon-cyberpunk-city-rooftop-silhouette-sh-1366x768.jpg' },
+            { name: 'Toxic Lime',      shape: 'lime',    primary: '#b6ff00', secondary: '#00ffd5', success: '#baff29', danger: '#ff3860', bg: 'https://images.hdqwalls.com/download/anime-cat-girl-cyberpunk-neon-city-night-ku-1366x768.jpg' },
+            { name: 'Royal Gold',      shape: 'gold',    primary: '#ffd700', secondary: '#bd00ff', success: '#7cff6b', danger: '#ff2e63', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
+            { name: 'Nebula Magenta',  shape: 'magenta', primary: '#ff00c8', secondary: '#6200ff', success: '#00ffb2', danger: '#ff1744', bg: 'https://images.hdqwalls.com/download/anime-girl-city-night-neon-cyberpunk-4k-kw-1366x768.jpg' },
+            { name: 'Ocean Teal',      shape: 'teal',    primary: '#00e5ff', secondary: '#0066ff', success: '#00ffa6', danger: '#ff3d5a', bg: 'https://images.hdqwalls.com/download/cyberpunk-blue-hair-warrior-looking-at-the-city-cx-1366x768.jpg' },
+            { name: 'Halloween Ember', shape: 'ember',   primary: '#ff7a00', secondary: '#7c00ff', success: '#7bff00', danger: '#ff0033', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
+            { name: 'Deep Violet',     shape: 'violet',  primary: '#b967ff', secondary: '#00d4ff', success: '#6bffb8', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/cyberpunk-anime-girl-purple-hair-city-moon-ay-1366x768.jpg' },
+            { name: 'Frost Crimson',   shape: 'crimson', primary: '#ff2e2e', secondary: '#00ff6a', success: '#ffd700', danger: '#ff2e2e', bg: 'https://images.hdqwalls.com/download/cyberpunk-anime-girl-red-neon-motorcycle-vz-1366x768.jpg' }
+        ];
+
+        // EKSEKUSI TEMA & APPLY KURSOR DINAMIS
+        (function applyDynamicTheme() {
             var theme = MONTHLY_THEMES[new Date().getMonth()];
             var root = document.documentElement.style;
+
             root.setProperty('--cyan-glow', theme.primary);
             root.setProperty('--cyan-glow-rgb', hexToRgb(theme.primary));
             root.setProperty('--purple-glow', theme.secondary);
@@ -1221,342 +773,55 @@
             root.setProperty('--danger', theme.danger);
             root.setProperty('--danger-rgb', hexToRgb(theme.danger));
             root.setProperty('--bg-photo', "url('" + theme.bg + "')");
+
+            // MEMASANG BENTUK & WARNA KURSOR TERBARU
+            var cursorValue = getCustomCursor(theme.shape, theme.primary);
+            root.setProperty('--current-cursor', cursorValue);
         })();
-    </script>
 
-</head>
-
-
-
-<body>
-
-
-
-    <!-- Container Glitter Jatuh Space Stardust -->
-
-    <div id="glitter-container"></div>
-
-
-
-    <!-- Toast Notifikasi Melayang -->
-
-    <div id="toast">✨ DATA BERHASIL DISALIN!</div>
-
-
-
-    <div id="main-menu">
-
-        <div class="menu-title">
-
-            <div class="menu-logo-wrap">
-
-                <img src="https://i.postimg.cc/sg7M84rZ/Gemini-Generated-Image-bf4r9dbf4r9dbf4r-removebg-preview.png" alt="Logo">
-
-            </div>
-
-            <h1>SHORTCUT PANEL</h1>
-
-            <p>Pilih Tools Shortcut Bosku!</p>
-
-        </div>
-
-        <div class="grid-menu">
-
-
-
-            <div class="menu-card" onclick="openTool('wd-container')">
-
-                <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp"
-
-                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto;filter:grayscale(1) brightness(1.5)">
-
-                <h3>SHORTCUT WD IDN</h3>
-
-                <p>Proses data Withdraw cepat & akurat</p>
-
-            </div>
-
-
-
-            <div class="menu-card" onclick="openTool('wdpng-container')">
-
-                <img src="https://img.pikbest.com/png-images/20250519/golden-coin-with-dollar-symbol-and-stars_11718025.png!w700wp"
-
-                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto;filter:sepia(-1) saturate(7) hue-rotate(180deg) brightness(1.4)">
-
-                <h3>SHORTCUT WD PNG</h3>
-
-                <p>Proses data Withdraw PNG cepat & akurat</p>
-
-            </div>
-
-
-
-            <div class="menu-card" onclick="openTool('klikbca-container')">
-
-                <img src="https://pustaka.bca.co.id/Ocean/Product/DA162B01-4C4E-4E3F-A118-84C5514F0BD8/Logo/KlikBCA-Bisnis--Logo%20(1)-min.png"
-
-                    style="width:85px;height:85px;object-fit:contain;display:block;margin:0 auto">
-
-                <h3>SHORTCUT DP KLIK BCA</h3>
-
-                <p>Filter mutasi Klik BCA</p>
-
-            </div>
-
-
-
-            <div class="menu-card" onclick="openTool('mybca-container')">
-
-                <img src="https://play-lh.googleusercontent.com/ckrnc0pzN0oZgSaMQMnOYrICdBLwFTuI17MlTUp9ftyZPJ-m4K1pA3_Dz1B-1dCFVZbv"
-
-                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto">
-
-                <h3>SHORTCUT DP MY BCA</h3>
-
-                <p>Filter mutasi MyBCA</p>
-
-            </div>
-
-
-
-            <div class="menu-card" onclick="openExternalLink('https://pnc128it.github.io/REKAPAN-BANK-STATEMENT/')">
-
-                <img src="https://cdn-icons-png.flaticon.com/512/12142/12142876.png"
-
-                    style="width:75px;height:75px;object-fit:contain;display:block;margin:0 auto">
-
-                <h3>REKAPAN BANK STATEMENT</h3>
-
-                <p>Tools rekapan bank statement</p>
-
-            </div>
-
-
-
-        </div>
-
-    </div>
-
-
-
-    <!-- SHORTCUT WD IDN -->
-
-    <div id="wd-container" class="container">
-
-        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
-
-        <header>
-
-            <h2>SHORTCUT WD IDN</h2>
-
-        </header>
-
-        <textarea id="inputWD" placeholder="Tempel data WD di sini..."></textarea>
-
-        <div class="action-bar">
-
-            <button class="btn-copy" onclick="copyData('tableBodyWD')">✨ Salin Data WD!</button>
-
-            <button class="btn-clear" onclick="clearTool('inputWD', 'tableBodyWD')">🗑️ Bersihkan</button>
-
-        </div>
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Bank</th>
-
-                        <th>No. Rekening</th>
-
-                        <th>User ID</th>
-
-                        <th>Nama Pemilik</th>
-
-                        <th>Nominal</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="tableBodyWD"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- SHORTCUT WD PNG -->
-
-    <div id="wdpng-container" class="container">
-
-        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
-
-        <header>
-
-            <h2>SHORTCUT WD PNG</h2>
-
-        </header>
-
-        <textarea id="inputWDPNG" placeholder="Tempel data WD PNG di sini..."></textarea>
-
-        <div class="action-bar">
-
-            <button class="btn-copy" onclick="copyData('tableBodyWDPNG')">✨ Salin Data WD PNG!</button>
-
-            <button class="btn-clear" onclick="clearTool('inputWDPNG', 'tableBodyWDPNG')">🗑️ Bersihkan</button>
-
-        </div>
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Bank</th>
-
-                        <th>No. Rekening</th>
-
-                        <th>User ID</th>
-
-                        <th>Nama Pemilik</th>
-
-                        <th>Nominal</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="tableBodyWDPNG"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- SHORTCUT DP KLIK BCA -->
-
-    <div id="klikbca-container" class="container">
-
-        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
-
-        <header>
-
-            <h2>SHORTCUT DP KLIK BCA</h2>
-
-        </header>
-
-        <textarea id="inputKlikBCA" placeholder="Tempel mutasi Klik BCA di sini..."></textarea>
-
-        <div class="action-bar">
-
-            <button class="btn-copy" onclick="copyData('tableBodyKlikBCA')">✨ Salin Data KLIK BCA!</button>
-
-            <button class="btn-clear" onclick="clearTool('inputKlikBCA', 'tableBodyKlikBCA')">🗑️ Bersihkan</button>
-
-        </div>
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Nama Pengirim / Penerima</th>
-
-                        <th>Nominal Masuk (CR)</th>
-
-                        <th>Nominal Keluar (DB)</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="tableBodyKlikBCA"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- SHORTCUT DP MY BCA -->
-
-    <div id="mybca-container" class="container">
-
-        <button class="btn-back" onclick="backToMenu()">⬅ Kembali</button>
-
-        <header>
-
-            <h2>SHORTCUT DP MY BCA</h2>
-
-        </header>
-
-        <textarea id="inputMyBCA" placeholder="Tempel mutasi MyBCA di sini..."></textarea>
-
-        <div class="action-bar">
-
-            <button class="btn-copy" onclick="copyData('tableBodyMyBCA')">✨ Salin Data MyBCA!</button>
-
-            <button class="btn-clear" onclick="clearTool('inputMyBCA', 'tableBodyMyBCA')">🗑️ Bersihkan</button>
-
-        </div>
-
-        <div class="table-container">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Nama Pengirim / Penerima</th>
-
-                        <th>Nominal Masuk (CR)</th>
-
-                        <th>Nominal Keluar (DB)</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="tableBodyMyBCA"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-
-
-    <script>
-        // --- LOGIKA GENERATE EFEK GLITTER CYBER SPACE ---
+        // --- KONTROL EFEK CAHAYA (GLOW) DAN GLITTER PADA GERAKAN KURSOR ---
+        const glowAura = document.getElementById('cursor-glow-aura');
+
+        document.addEventListener('mousemove', function (e) {
+            // Posisi Pendaran Cahaya Utama Kursor
+            glowAura.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+
+            // Pembuatan Efek Glitter Multi-Warna yang Mengikuti Gerakan Kursor
+            if (Math.random() > 0.15) { // Frekuensi glitter diperbanyak
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('cursor-sparkle');
+                
+                sparkle.style.left = e.clientX + 'px';
+                sparkle.style.top = e.clientY + 'px';
+
+                const computedStyle = getComputedStyle(document.documentElement);
+                const primary = computedStyle.getPropertyValue('--cyan-glow').trim();
+                const secondary = computedStyle.getPropertyValue('--purple-glow').trim();
+
+                const isWhite = Math.random() > 0.7;
+                const activeColor = isWhite ? '#ffffff' : (Math.random() > 0.5 ? primary : secondary);
+
+                const size = Math.random() * 6 + 3;
+                sparkle.style.width = size + 'px';
+                sparkle.style.height = size + 'px';
+                sparkle.style.backgroundColor = activeColor;
+                sparkle.style.boxShadow = `0 0 8px ${activeColor}, 0 0 16px ${activeColor}`;
+
+                document.body.appendChild(sparkle);
+
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 700);
+            }
+        });
+
+        // --- LOGIKA GENERATE EFEK GLITTER CYBER SPACE (BACKGROUND) ---
         function createGlitter() {
             const container = document.getElementById('glitter-container');
             const particleCount = 50;
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('glitter-particle');
-                // Pembagian warna 50% Cyan dan 50% Purple
                 if (Math.random() > 0.5) {
                     particle.classList.add('white');
                 } else {
@@ -1573,6 +838,7 @@
             }
         }
         document.addEventListener('DOMContentLoaded', createGlitter);
+
         // --- NAVIGASI PANEL ---
         function openTool(id) {
             document.getElementById('main-menu').style.display = 'none';
@@ -1596,6 +862,7 @@
             toast.className = "show";
             setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2500);
         }
+
         // ===== WD IDN =====
         document.getElementById('inputWD').addEventListener('input', function () {
             const val = this.value.trim();
@@ -1620,6 +887,7 @@
                 tableBodyWD.appendChild(tr);
             }
         });
+
         // ===== WD PNG =====
         document.getElementById('inputWDPNG').addEventListener('input', function () {
             const val = this.value.trim();
@@ -1651,6 +919,7 @@
                 tableBodyWDPNG.appendChild(tr);
             });
         });
+
         // ===== KLIK BCA =====
         document.getElementById('inputKlikBCA').addEventListener('input', function () {
             const val = this.value.trim();
@@ -1727,6 +996,7 @@
                 tableBodyKlikBCA.appendChild(tr);
             });
         });
+
         // ===== MY BCA =====
         document.getElementById('inputMyBCA').addEventListener('input', function () {
             const val = this.value.trim();
@@ -1789,6 +1059,7 @@
                 tableBodyMyBCA.appendChild(tr);
             });
         });
+
         // --- SALIN DATA KE CLIPBOARD ---
         async function copyData(tableId) {
             const body = document.getElementById(tableId);
@@ -1806,11 +1077,5 @@
             showToast("✨ DATA BERHASIL DISALIN!");
         }
     </script>
-
-
-
 </body>
-
-
-
 </html>
