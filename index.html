@@ -27,9 +27,6 @@
             box-sizing: border-box;
         }
 
-        /* -------------------------------------------------------------
-           SETTING KURSOR SAMA (DEFAULT & POINTER PAKAI PANAH)
-        ------------------------------------------------------------- */
         html, body {
             cursor: var(--cursor-default, auto) !important;
         }
@@ -56,9 +53,6 @@
             position: relative;
         }
 
-        /* -------------------------------------------------------------
-           EFEK TETESAN AIR (WATER RIPPLE) & CURSOR TRAIL GLITTER
-        ------------------------------------------------------------- */
         .water-ripple {
             position: fixed;
             border-radius: 50%;
@@ -108,9 +102,6 @@
             }
         }
 
-        /* -------------------------------------------------------------
-           CONTAINER EFEK STARDUST / GLITTER SPACE (BACKGROUND)
-        ------------------------------------------------------------- */
         #glitter-container {
             position: fixed;
             top: 0;
@@ -158,9 +149,6 @@
             100% { filter: brightness(1.6) scale(1.3); }
         }
 
-        /* -------------------------------------------------------------
-           MAIN MENU LAYOUT
-        ------------------------------------------------------------- */
         #main-menu {
             display: flex;
             flex-direction: column;
@@ -367,9 +355,6 @@
             margin: 0;
         }
 
-        /* -------------------------------------------------------------
-           TOOL PANEL CONTAINER
-        ------------------------------------------------------------- */
         .container {
             display: none;
             max-width: 1200px;
@@ -567,9 +552,6 @@
     </style>
 
     <script>
-        // =================================================================
-        // GENERATOR KURSOR SAMA (DENGAN TEMA WARNA BULANAN)
-        // =================================================================
         (function () {
             function hexToRgb(hex) {
                 hex = hex.replace('#', '');
@@ -578,7 +560,6 @@
                 return ((num >> 16) & 255) + ', ' + ((num >> 8) & 255) + ', ' + (num & 255);
             }
 
-            // GAMBAR KURSOR PANAH KUSTOM SAMA UNTUK DEFAULT MAUPUN POINTER KLIK
             function buildArrowCursorUrl(color) {
                 var svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="${color}" stroke="#000000" stroke-width="1.5" stroke-linejoin="round" d="M 3,2 L 18,12 L 11,14 L 8,21 Z"/></svg>`;
                 return 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '") 3 2, auto';
@@ -610,7 +591,6 @@
             root.setProperty('--danger-rgb', hexToRgb(theme.danger));
             root.setProperty('--bg-photo', "url('" + theme.bg + "')");
             
-            // Kursor panah kustom yang sama digunakan untuk default & pointer
             var arrowCursor = buildArrowCursorUrl(theme.primary);
             root.setProperty('--cursor-default', arrowCursor);
             root.setProperty('--cursor-pointer', arrowCursor);
@@ -620,10 +600,7 @@
 
 <body>
 
-    <!-- Container Glitter Space -->
     <div id="glitter-container"></div>
-
-    <!-- Toast Notifikasi -->
     <div id="toast">✨ DATA BERHASIL DISALIN!</div>
 
     <div id="main-menu">
@@ -779,7 +756,6 @@
     </div>
 
     <script>
-        // LOGIKA EFEK GLITTER TRAIL & TETESAN AIR PADA MOUSE
         document.addEventListener('click', function (e) {
             const ripple = document.createElement('div');
             ripple.className = 'water-ripple';
@@ -787,7 +763,6 @@
             ripple.style.top = `${e.clientY}px`;
             document.body.appendChild(ripple);
 
-            // Efek Glitter Burst saat Klik
             for (let i = 0; i < 8; i++) {
                 createGlitterParticle(e.clientX, e.clientY, true);
             }
@@ -798,7 +773,7 @@
         let lastMove = 0;
         document.addEventListener('mousemove', function (e) {
             const now = Date.now();
-            if (now - lastMove > 40) { // Menampilkan jejak glitter pergerakan kursor
+            if (now - lastMove > 40) {
                 createGlitterParticle(e.clientX, e.clientY, false);
                 lastMove = now;
             }
@@ -822,7 +797,6 @@
             setTimeout(() => particle.remove(), 800);
         }
 
-        // LOGIKA EFEK GLITTER BACKGROUND
         function createGlitter() {
             const container = document.getElementById('glitter-container');
             const particleCount = 50;
@@ -846,7 +820,6 @@
         }
         document.addEventListener('DOMContentLoaded', createGlitter);
 
-        // NAVIGASI PANEL
         function openTool(id) {
             document.getElementById('main-menu').style.display = 'none';
             document.getElementById(id).style.display = 'block';
@@ -1004,59 +977,108 @@
             });
         });
 
-        // MY BCA
+        // SHORTCUT DP MY BCA (OPTIMIZED PARSER)
         document.getElementById('inputMyBCA').addEventListener('input', function () {
             const val = this.value.trim();
             const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
             if (!val) { tableBodyMyBCA.innerHTML = ""; return; }
             tableBodyMyBCA.innerHTML = "";
-            let rawBlocks = val.split(/(?=\b\d{1,2}\s+[A-Za-z]{3,}\s+\d{4}\b)/);
-            rawBlocks.forEach(block => {
+
+            // Mendukung baik format teks per baris maupun blok dengan tanggal/garis baru
+            let blocks = val.split(/(?=\b\d{1,2}\s+[A-Za-z]{3,}\s+\d{4}\b)|(?=\b\d{2}\/\d{2}\/\d{4}\b)/);
+            if (blocks.length === 1) {
+                blocks = val.split('\n').filter(l => l.trim().length > 0);
+            }
+
+            blocks.forEach(block => {
                 let text = block.trim();
-                if (text.length < 10) return;
+                if (text.length < 5) return;
+
                 let nama = "TIDAK TERDETEKSI";
                 let masuk = "";
                 let keluar = "";
-                const isCR = /\bCR\b/i.test(text);
-                const isDB = /\bDB\b/i.test(text);
-                const allIDR = [...text.matchAll(/IDR\s*([\d,]+\.\d{2})/gi)];
-                const nominal = allIDR.length > 0 ? allIDR[0][1] : "";
-                if (isCR) masuk = nominal;
-                else if (isDB) keluar = nominal;
-                if (/TRFDN-/i.test(text)) {
-                    let m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+DEBIT|\s+IDR|\t|$)/i);
-                    if (m) {
-                        nama = m[1].replace(/^\d+\s*/, '').trim();
-                    }
+
+                // Ekstraksi Nominal dan Status CR / DB
+                let isCR = /\bCR\b/i.test(text);
+                let isDB = /\bDB\b/i.test(text);
+
+                // Mencari nominal transaksi (baik dengan format IDR 100,000.00 maupun angka berformat ribuan)
+                let nominalMatch = text.match(/IDR\s*([\d,]+\.\d{2})/i) || text.match(/([\d,]+\.\d{2})/);
+                let nominal = nominalMatch ? nominalMatch[1] : "";
+
+                if (isCR) {
+                    masuk = nominal;
+                } else if (isDB) {
+                    keluar = nominal;
+                } else {
+                    // Fallback jika indikator CR/DB tidak tertulis eksplisit namun ada di daftar kolom
+                    masuk = nominal;
                 }
-                else if (/GoPay|DOMPET ANAK BANGSA/i.test(text)) {
-                    if (text.includes("DOMPET ANAK BANGSA")) {
-                        nama = "DOMPET ANAK BANGSA";
+
+                // Eksen Ekstraksi Nama Pengirim / Penerima berdasarkan Jenis Transaksi
+
+                // 1. SWITCHING / TRANSFER ANTAR BANK
+                if (/SWITCHING|TRANSFER/i.test(text)) {
+                    if (/BIAYA\s+TXN/i.test(text)) {
+                        let m = text.match(/BIAYA\s+TXN\s+KE\s+\d+\s+(.+?)(?:\s+MYBCA|\s+BCA|\s*IDR|\t|$)/i);
+                        if (m) nama = m[1].trim() + " (Biaya Txn)";
+                    } else if (/TRANSFER\s+(?:DR|KE)/i.test(text)) {
+                        let m = text.match(/TRANSFER\s+(?:DR|KE)\s+\d+\s+(.+?)(?:\s+[A-Z]{3,4}\b|\s*IDR|\t|$)/i);
+                        if (m) nama = m[1].trim();
                     } else {
-                        let m = text.match(/GoPay\s+([A-Za-z\s]+?)(?:\s+ID\d+|\s+IDR|\t|$)/i);
+                        let m = text.match(/(?:TRF|SWITCHING\s+(?:DB|CR))\s+(.+?)(?:\s+\d{3}\s+|\s+MYBCA|\s+BCA|\s*IDR|\t|$)/i);
                         if (m) nama = m[1].trim();
                     }
                 }
+                // 2. SETORAN VIA CDM / MESIN ATM
+                else if (/SETORAN\s+VIA\s+CDM/i.test(text)) {
+                    let m = text.match(/WSID:[A-Z0-9]+\s+(.+?)(?:\s*IDR|\t|$)/i);
+                    if (m) nama = m[1].trim();
+                }
+                // 3. TRSF E-BANKING (BCA ke BCA)
+                else if (/TRSF E-BANKING/i.test(text)) {
+                    if (/WS\d+/i.test(text)) {
+                        let m = text.match(/WS\d+\s+[\d.]+\s+(.+?)(?:\s*IDR|\t|$)/i);
+                        if (m) nama = m[1].trim();
+                    } else {
+                        let m = text.match(/TRSF\s+E-BANKING\s+(?:CR|DB)?\s*-?\s*(?:[A-Z0-9\/]+\s+)?(.+?)(?:\s*IDR|\t|$)/i);
+                        if (m) nama = m[1].trim();
+                    }
+                }
+                // 4. E-WALLET (TRFDN / DANA / OVO / GOPAY)
+                else if (/TRFDN-|GOPAY|DOMPET ANAK BANGSA/i.test(text)) {
+                    if (text.includes("DOMPET ANAK BANGSA")) {
+                        nama = "DOMPET ANAK BANGSA";
+                    } else if (/TRFDN-/i.test(text)) {
+                        let m = text.match(/TRFDN-([A-Z0-9\s]+?)(?:\s+ESPAY|\s+DEBIT|\s+IDR|\t|$)/i);
+                        if (m) nama = m[1].replace(/^\d+\s*/, '').trim();
+                    } else {
+                        let m = text.match(/GOPAY\s+([A-Za-z\s]+?)(?:\s+ID\d+|\s+IDR|\t|$)/i);
+                        if (m) nama = m[1].trim();
+                    }
+                }
+                // 5. BI-FAST
                 else if (/BI-FAST/i.test(text)) {
                     let mDr = text.match(/TRANSFER DR\s+\d+\s+(.+?)(?:\s*IDR|\t|$)/i);
-                    let mKe = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MyBCA|\s*IDR|\t|$)/i);
+                    let mKe = text.match(/TRANSFER KE\s+\d+\s+(.+?)(?:\s+MYBCA|\s*IDR|\t|$)/i);
                     if (mDr) nama = mDr[1].trim();
                     else if (mKe) nama = mKe[1].trim();
                 }
-                else if (/WS\d+/i.test(text)) {
-                    let m = text.match(/WS\d+\s+[\d.]+\s+(.+?)(?:\s*IDR|\t|$)/i);
-                    if (m) nama = m[1].trim();
-                }
-                else if (/TRSF E-BANKING/i.test(text)) {
-                    let m = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*[\d\/]+\s+[A-Z0-9]+\s+(.+?)(?:\s*IDR|\t|$)/i);
-                    if (m) {
-                        nama = m[1].trim();
-                    } else {
-                        let mGen = text.match(/TRSF E-BANKING\s+(?:CR|DB)\s*-\s*.+?\s+([A-Z\s]{3,})(?:\s*IDR|\t|$)/i);
-                        if (mGen) nama = mGen[1].trim();
+
+                // Fallback pencarian nama jika pola spesifik di atas belum mencakup
+                if (nama === "TIDAK TERDETEKSI") {
+                    let cleanText = text.replace(/\b(CR|DB|IDR|\d{2}\/\d{2}\/\d{4}|\d{1,2}\s+[A-Za-z]{3,}\s+\d{4})\b/gi, '').trim();
+                    let lines = cleanText.split('\n').map(l => l.trim()).filter(l => l.length > 2);
+                    if (lines.length > 0) {
+                        nama = lines[0].replace(/[\d,.]/g, '').trim();
                     }
                 }
-                nama = nama.replace(/IDR.*$/i, '').trim();
+
+                // Pembersihan akhir nama
+                nama = nama.replace(/IDR.*$/i, '').replace(/WSID:[A-Z0-9]+/i, '').trim();
+
+                if (!nama) nama = "TIDAK TERDETEKSI";
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="font-weight:bold">${nama}</td>
@@ -1067,7 +1089,6 @@
             });
         });
 
-        // SALIN CLIPBOARD
         async function copyData(tableId) {
             const body = document.getElementById(tableId);
             const rows = body.querySelectorAll('tr');
