@@ -5,12 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHORTCUT PANEL - SPACE CYBER EDITION</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Warna Akses Tema Space & Cyber Neon */
             --cyan-glow: #00f0ff;
             --cyan-glow-rgb: 0, 240, 255;
             --purple-glow: #bd00ff;
@@ -24,7 +21,6 @@
             --danger: #ff3366;
             --danger-rgb: 255, 51, 102;
             --bg-photo: url('https://images.hdqwalls.com/download/anime-girl-purple-eyes-cyberpunk-5k-w4-1366x768.jpg');
-            --current-cursor: auto;
         }
 
         * {
@@ -32,13 +28,17 @@
         }
 
         /* -------------------------------------------------------------
-           DYNAMIC CURSOR ATOMIZATION FOR WHOLE PAGE
+           SETTING KURSOR SAMA (DEFAULT & POINTER PAKAI PANAH)
         ------------------------------------------------------------- */
-        *, html, body, button, input, textarea, a, div, span, table, tr, td, th {
-            cursor: var(--current-cursor) !important;
+        html, body {
+            cursor: var(--cursor-default, auto) !important;
         }
 
-        body, html {
+        a, button, .menu-card, [onclick], input[type="button"], input[type="submit"], input, textarea, select {
+            cursor: var(--cursor-pointer, pointer) !important;
+        }
+
+        body {
             font-family: 'Poppins', sans-serif;
             background-color: #050714;
             background-image:
@@ -57,47 +57,54 @@
         }
 
         /* -------------------------------------------------------------
-           EFEK CAHAYA (GLOW) UTAMA PADA KURSOR
+           EFEK TETESAN AIR (WATER RIPPLE) & CURSOR TRAIL GLITTER
         ------------------------------------------------------------- */
-        #cursor-glow-aura {
+        .water-ripple {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 40px;
-            height: 40px;
-            margin-left: -17px;
-            margin-top: -17px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(var(--cyan-glow-rgb), 0.8) 0%, rgba(var(--cyan-glow-rgb), 0.3) 45%, transparent 75%);
-            filter: blur(4px);
-            pointer-events: none;
-            z-index: 99998;
-            transform: translate3d(0, 0, 0);
-            transition: transform 0.04s ease-out;
-            mix-blend-mode: screen;
-        }
-
-        /* -------------------------------------------------------------
-           EFEK GLITTER / SPARKLE JEJAK GERAKAN KURSOR
-        ------------------------------------------------------------- */
-        .cursor-sparkle {
-            position: fixed;
-            top: 0;
-            left: 0;
-            border-radius: 50%;
+            border: 2px solid var(--cyan-glow);
+            background: rgba(var(--cyan-glow-rgb), 0.15);
+            transform: translate(-50%, -50%) scale(0);
+            animation: rippleAnim 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
             pointer-events: none;
             z-index: 99999;
-            animation: fadeSparkle 0.7s forwards cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 0 12px var(--cyan-glow), inset 0 0 12px rgba(var(--cyan-glow-rgb), 0.5);
         }
 
-        @keyframes fadeSparkle {
+        @keyframes rippleAnim {
+            0% {
+                width: 0px;
+                height: 0px;
+                opacity: 1;
+                border-width: 3px;
+            }
+            100% {
+                width: 80px;
+                height: 80px;
+                opacity: 0;
+                border-width: 1px;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .cursor-glitter {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            background: var(--cyan-glow);
+            box-shadow: 0 0 6px var(--cyan-glow), 0 0 10px #ffffff;
+            z-index: 99998;
+            animation: cursorGlitterFade 0.8s ease-out forwards;
+        }
+
+        @keyframes cursorGlitterFade {
             0% {
                 opacity: 1;
-                transform: translate(-50%, -50%) scale(1.4) rotate(0deg);
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
             }
             100% {
                 opacity: 0;
-                transform: translate(-50%, -50%) scale(0.1) translateY(25px) rotate(180deg);
+                transform: translate(-50%, -50%) scale(0.1) translate(var(--mx), var(--my)) rotate(180deg);
             }
         }
 
@@ -111,7 +118,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 9997;
             overflow: hidden;
         }
 
@@ -152,7 +159,7 @@
         }
 
         /* -------------------------------------------------------------
-           MAIN MENU LAYOUT (TEMA CYBER SPACE)
+           MAIN MENU LAYOUT
         ------------------------------------------------------------- */
         #main-menu {
             display: flex;
@@ -510,7 +517,9 @@
             font-size: 14px;
         }
 
-        tr:nth-child(even) { background: rgba(var(--cyan-glow-rgb), 0.04); }
+        tr:nth-child(even) {
+            background: rgba(var(--cyan-glow-rgb), 0.04);
+        }
 
         .bank-badge {
             color: var(--cyan-glow);
@@ -556,17 +565,65 @@
             border-radius: 10px;
         }
     </style>
+
+    <script>
+        // =================================================================
+        // GENERATOR KURSOR SAMA (DENGAN TEMA WARNA BULANAN)
+        // =================================================================
+        (function () {
+            function hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
+                var num = parseInt(hex, 16);
+                return ((num >> 16) & 255) + ', ' + ((num >> 8) & 255) + ', ' + (num & 255);
+            }
+
+            // GAMBAR KURSOR PANAH KUSTOM SAMA UNTUK DEFAULT MAUPUN POINTER KLIK
+            function buildArrowCursorUrl(color) {
+                var svg = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="${color}" stroke="#000000" stroke-width="1.5" stroke-linejoin="round" d="M 3,2 L 18,12 L 11,14 L 8,21 Z"/></svg>`;
+                return 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '") 3 2, auto';
+            }
+
+            var MONTHLY_THEMES = [
+                { name: 'Cyber Ice',       primary: '#00f0ff', secondary: '#6a5cff', success: '#00ffaa', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/anime-girl-purple-eyes-cyberpunk-5k-w4-1366x768.jpg' },
+                { name: 'Neon Rose',       primary: '#ff4fd8', secondary: '#7c3aed', success: '#2dffb0', danger: '#ff3b3b', bg: 'https://images.hdqwalls.com/download/neon-samurai-warrior-with-pink-and-blue-glowing-katana-ma-1366x768.jpg' },
+                { name: 'Emerald Circuit', primary: '#00ffb3', secondary: '#00c2ff', success: '#7cff00', danger: '#ff5566', bg: 'https://images.hdqwalls.com/download/canglan-taixuan-hv-1366x768.jpg' },
+                { name: 'Solar Amber',     primary: '#ffb703', secondary: '#ff5e62', success: '#7cfc00', danger: '#ff2d55', bg: 'https://images.hdqwalls.com/download/ronin-samurai-at-red-sunset-8s-1366x768.jpg' },
+                { name: 'Aurora Mint',     primary: '#7cffcb', secondary: '#7c83ff', success: '#00e6a8', danger: '#ff4d6d', bg: 'https://images.hdqwalls.com/download/blue-purple-neon-cyberpunk-city-rooftop-silhouette-sh-1366x768.jpg' },
+                { name: 'Toxic Lime',      primary: '#b6ff00', secondary: '#00ffd5', success: '#baff29', danger: '#ff3860', bg: 'https://images.hdqwalls.com/download/anime-cat-girl-cyberpunk-neon-city-night-ku-1366x768.jpg' },
+                { name: 'Royal Gold',      primary: '#ffd700', secondary: '#bd00ff', success: '#7cff6b', danger: '#ff2e63', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
+                { name: 'Nebula Magenta',  primary: '#ff00c8', secondary: '#6200ff', success: '#00ffb2', danger: '#ff1744', bg: 'https://images.hdqwalls.com/download/katana-samurai-warrior-in-red-atmosphere-td-1366x768.jpg' },
+                { name: 'Ocean Teal',      primary: '#00e5ff', secondary: '#0066ff', success: '#00ffa6', danger: '#ff3d5a', bg: 'https://images.hdqwalls.com/download/cyberpunk-blue-hair-warrior-looking-at-the-city-cx-1366x768.jpg' },
+                { name: 'Halloween Ember', primary: '#ff7a00', secondary: '#7c00ff', success: '#7bff00', danger: '#ff0033', bg: 'https://images.hdqwalls.com/download/neo-hong-kong-neon-rainy-cyberpunk-night-ug-1366x768.jpg' },
+                { name: 'Deep Violet',     primary: '#b967ff', secondary: '#00d4ff', success: '#6bffb8', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/cyberpunk-anime-girl-purple-hair-city-moon-ay-1366x768.jpg' },
+                { name: 'Frost Crimson',   primary: '#ff2e2e', secondary: '#00ff6a', success: '#ffd700', danger: '#ff2e2e', bg: 'https://images.hdqwalls.com/download/cyberpunk-anime-girl-red-neon-motorcycle-vz-1366x768.jpg' }
+            ];
+
+            var theme = MONTHLY_THEMES[new Date().getMonth()];
+            var root = document.documentElement.style;
+            root.setProperty('--cyan-glow', theme.primary);
+            root.setProperty('--cyan-glow-rgb', hexToRgb(theme.primary));
+            root.setProperty('--purple-glow', theme.secondary);
+            root.setProperty('--purple-glow-rgb', hexToRgb(theme.secondary));
+            root.setProperty('--success', theme.success);
+            root.setProperty('--danger', theme.danger);
+            root.setProperty('--danger-rgb', hexToRgb(theme.danger));
+            root.setProperty('--bg-photo', "url('" + theme.bg + "')");
+            
+            // Kursor panah kustom yang sama digunakan untuk default & pointer
+            var arrowCursor = buildArrowCursorUrl(theme.primary);
+            root.setProperty('--cursor-default', arrowCursor);
+            root.setProperty('--cursor-pointer', arrowCursor);
+        })();
+    </script>
 </head>
 
 <body>
 
-    <!-- ELEMEN PENDARAN CAHAYA UTAMA PADA KURSOR -->
-    <div id="cursor-glow-aura"></div>
-
-    <!-- Container Glitter Jatuh Space Stardust -->
+    <!-- Container Glitter Space -->
     <div id="glitter-container"></div>
 
-    <!-- Toast Notifikasi Melayang -->
+    <!-- Toast Notifikasi -->
     <div id="toast">✨ DATA BERHASIL DISALIN!</div>
 
     <div id="main-menu">
@@ -722,100 +779,50 @@
     </div>
 
     <script>
-        // =================================================================
-        // GENERATOR KURSOR SVG ROUNDED ARROW TERHADAP WARNA TEMA BULANAN
-        // =================================================================
-        function hexToRgb(hex) {
-            hex = hex.replace('#', '');
-            if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
-            var num = parseInt(hex, 16);
-            return ((num >> 16) & 255) + ', ' + ((num >> 8) & 255) + ', ' + (num & 255);
-        }
+        // LOGIKA EFEK GLITTER TRAIL & TETESAN AIR PADA MOUSE
+        document.addEventListener('click', function (e) {
+            const ripple = document.createElement('div');
+            ripple.className = 'water-ripple';
+            ripple.style.left = `${e.clientX}px`;
+            ripple.style.top = `${e.clientY}px`;
+            document.body.appendChild(ripple);
 
-        function getCustomCursor(shapeType, colorHex) {
-            var c = encodeURIComponent(colorHex);
-            
-            // SVG Panah Rounded Arrow persis gambar rujukan
-            var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='" + c + "' stroke='%23050714' stroke-width='2' stroke-linejoin='round' stroke-linecap='round'><path d='M3.5 3.5l15.8 10.5-7.2 2.1-4.2 6.9z'/></svg>";
-            
-            // Hotspot akurat pada ujung panah kiri-atas
-            var hotX = 4;
-            var hotY = 4;
+            // Efek Glitter Burst saat Klik
+            for (let i = 0; i < 8; i++) {
+                createGlitterParticle(e.clientX, e.clientY, true);
+            }
 
-            return "url(\"data:image/svg+xml;utf8," + svg + "\") " + hotX + " " + hotY + ", auto";
-        }
+            setTimeout(() => ripple.remove(), 600);
+        });
 
-        var MONTHLY_THEMES = [
-            { name: 'Cyber Ice',       shape: 'arrow',   primary: '#00f0ff', secondary: '#6a5cff', success: '#00ffaa', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/anime-girl-purple-eyes-cyberpunk-5k-w4-1366x768.jpg' },
-            { name: 'Neon Rose',       shape: 'rose',    primary: '#ff4fd8', secondary: '#7c3aed', success: '#2dffb0', danger: '#ff3b3b', bg: 'https://images.hdqwalls.com/download/anime-girl-city-night-neon-cyberpunk-4k-kw-1366x768.jpg' },
-            { name: 'Emerald Circuit', shape: 'circuit', primary: '#00ffb3', secondary: '#00c2ff', success: '#7cff00', danger: '#ff5566', bg: 'https://images.hdqwalls.com/download/cyberpunk-blue-hair-warrior-looking-at-the-city-cx-1366x768.jpg' },
-            { name: 'Solar Amber',     shape: 'sun',     primary: '#ffb703', secondary: '#ff5e62', success: '#7cfc00', danger: '#ff2d55', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
-            { name: 'Aurora Mint',     shape: 'mint',    primary: '#7cffcb', secondary: '#7c83ff', success: '#00e6a8', danger: '#ff4d6d', bg: 'https://images.hdqwalls.com/download/blue-purple-neon-cyberpunk-city-rooftop-silhouette-sh-1366x768.jpg' },
-            { name: 'Toxic Lime',      shape: 'lime',    primary: '#b6ff00', secondary: '#00ffd5', success: '#baff29', danger: '#ff3860', bg: 'https://images.hdqwalls.com/download/anime-cat-girl-cyberpunk-neon-city-night-ku-1366x768.jpg' },
-            { name: 'Royal Gold',      shape: 'gold',    primary: '#ffd700', secondary: '#bd00ff', success: '#7cff6b', danger: '#ff2e63', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
-            { name: 'Nebula Magenta',  shape: 'magenta', primary: '#ff00c8', secondary: '#6200ff', success: '#00ffb2', danger: '#ff1744', bg: 'https://images.hdqwalls.com/download/anime-girl-city-night-neon-cyberpunk-4k-kw-1366x768.jpg' },
-            { name: 'Ocean Teal',      shape: 'teal',    primary: '#00e5ff', secondary: '#0066ff', success: '#00ffa6', danger: '#ff3d5a', bg: 'https://images.hdqwalls.com/download/cyberpunk-blue-hair-warrior-looking-at-the-city-cx-1366x768.jpg' },
-            { name: 'Halloween Ember', shape: 'ember',   primary: '#ff7a00', secondary: '#7c00ff', success: '#7bff00', danger: '#ff0033', bg: 'https://images.hdqwalls.com/download/robot-and-girl-overlooking-a-golden-cyberpunk-cityscape-q8-1366x768.jpg' },
-            { name: 'Deep Violet',     shape: 'violet',  primary: '#b967ff', secondary: '#00d4ff', success: '#6bffb8', danger: '#ff3366', bg: 'https://images.hdqwalls.com/download/cyberpunk-anime-girl-purple-hair-city-moon-ay-1366x768.jpg' },
-            { name: 'Frost Crimson',   shape: 'crimson', primary: '#ff2e2e', secondary: '#00ff6a', success: '#ffd700', danger: '#ff2e2e', bg: 'https://images.hdqwalls.com/download/cyberpunk-anime-girl-red-neon-motorcycle-vz-1366x768.jpg' }
-        ];
-
-        // EKSEKUSI TEMA & APPLY KURSOR DINAMIS
-        (function applyDynamicTheme() {
-            var theme = MONTHLY_THEMES[new Date().getMonth()];
-            var root = document.documentElement.style;
-
-            root.setProperty('--cyan-glow', theme.primary);
-            root.setProperty('--cyan-glow-rgb', hexToRgb(theme.primary));
-            root.setProperty('--purple-glow', theme.secondary);
-            root.setProperty('--purple-glow-rgb', hexToRgb(theme.secondary));
-            root.setProperty('--success', theme.success);
-            root.setProperty('--danger', theme.danger);
-            root.setProperty('--danger-rgb', hexToRgb(theme.danger));
-            root.setProperty('--bg-photo', "url('" + theme.bg + "')");
-
-            // MEMASANG BENTUK & WARNA KURSOR TERBARU
-            var cursorValue = getCustomCursor(theme.shape, theme.primary);
-            root.setProperty('--current-cursor', cursorValue);
-        })();
-
-        // --- KONTROL EFEK CAHAYA (GLOW) DAN GLITTER PADA GERAKAN KURSOR ---
-        const glowAura = document.getElementById('cursor-glow-aura');
-
+        let lastMove = 0;
         document.addEventListener('mousemove', function (e) {
-            // Posisi Pendaran Cahaya Utama Kursor
-            glowAura.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-
-            // Pembuatan Efek Glitter Multi-Warna yang Mengikuti Gerakan Kursor
-            if (Math.random() > 0.15) { // Frekuensi glitter diperbanyak
-                const sparkle = document.createElement('div');
-                sparkle.classList.add('cursor-sparkle');
-                
-                sparkle.style.left = e.clientX + 'px';
-                sparkle.style.top = e.clientY + 'px';
-
-                const computedStyle = getComputedStyle(document.documentElement);
-                const primary = computedStyle.getPropertyValue('--cyan-glow').trim();
-                const secondary = computedStyle.getPropertyValue('--purple-glow').trim();
-
-                const isWhite = Math.random() > 0.7;
-                const activeColor = isWhite ? '#ffffff' : (Math.random() > 0.5 ? primary : secondary);
-
-                const size = Math.random() * 6 + 3;
-                sparkle.style.width = size + 'px';
-                sparkle.style.height = size + 'px';
-                sparkle.style.backgroundColor = activeColor;
-                sparkle.style.boxShadow = `0 0 8px ${activeColor}, 0 0 16px ${activeColor}`;
-
-                document.body.appendChild(sparkle);
-
-                setTimeout(() => {
-                    sparkle.remove();
-                }, 700);
+            const now = Date.now();
+            if (now - lastMove > 40) { // Menampilkan jejak glitter pergerakan kursor
+                createGlitterParticle(e.clientX, e.clientY, false);
+                lastMove = now;
             }
         });
 
-        // --- LOGIKA GENERATE EFEK GLITTER CYBER SPACE (BACKGROUND) ---
+        function createGlitterParticle(x, y, isBurst) {
+            const particle = document.createElement('div');
+            particle.className = 'cursor-glitter';
+            const size = isBurst ? (Math.random() * 6 + 4) : (Math.random() * 4 + 2);
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+
+            const mx = (Math.random() - 0.5) * (isBurst ? 80 : 30);
+            const my = (Math.random() - 0.5) * (isBurst ? 80 : 30);
+            particle.style.setProperty('--mx', `${mx}px`);
+            particle.style.setProperty('--my', `${my}px`);
+
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 800);
+        }
+
+        // LOGIKA EFEK GLITTER BACKGROUND
         function createGlitter() {
             const container = document.getElementById('glitter-container');
             const particleCount = 50;
@@ -839,7 +846,7 @@
         }
         document.addEventListener('DOMContentLoaded', createGlitter);
 
-        // --- NAVIGASI PANEL ---
+        // NAVIGASI PANEL
         function openTool(id) {
             document.getElementById('main-menu').style.display = 'none';
             document.getElementById(id).style.display = 'block';
@@ -863,7 +870,7 @@
             setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2500);
         }
 
-        // ===== WD IDN =====
+        // WD IDN
         document.getElementById('inputWD').addEventListener('input', function () {
             const val = this.value.trim();
             const tableBodyWD = document.getElementById('tableBodyWD');
@@ -888,7 +895,7 @@
             }
         });
 
-        // ===== WD PNG =====
+        // WD PNG
         document.getElementById('inputWDPNG').addEventListener('input', function () {
             const val = this.value.trim();
             const tableBodyWDPNG = document.getElementById('tableBodyWDPNG');
@@ -920,7 +927,7 @@
             });
         });
 
-        // ===== KLIK BCA =====
+        // KLIK BCA
         document.getElementById('inputKlikBCA').addEventListener('input', function () {
             const val = this.value.trim();
             const tableBodyKlikBCA = document.getElementById('tableBodyKlikBCA');
@@ -997,7 +1004,7 @@
             });
         });
 
-        // ===== MY BCA =====
+        // MY BCA
         document.getElementById('inputMyBCA').addEventListener('input', function () {
             const val = this.value.trim();
             const tableBodyMyBCA = document.getElementById('tableBodyMyBCA');
@@ -1060,7 +1067,7 @@
             });
         });
 
-        // --- SALIN DATA KE CLIPBOARD ---
+        // SALIN CLIPBOARD
         async function copyData(tableId) {
             const body = document.getElementById(tableId);
             const rows = body.querySelectorAll('tr');
@@ -1077,5 +1084,7 @@
             showToast("✨ DATA BERHASIL DISALIN!");
         }
     </script>
+
 </body>
+
 </html>
